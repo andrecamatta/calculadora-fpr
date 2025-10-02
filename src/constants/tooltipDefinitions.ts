@@ -14,35 +14,35 @@ export const TOOLTIPS: TooltipDefinitions = {
   produto: {
     description:
       "Tipo de produto financeiro que caracteriza a exposição ao risco de crédito (empréstimo, financiamento, derivativo, etc.)",
-    article: "Arts. 5-6",
+    article: "Arts. 5-6 (definições gerais de exposição)",
     regulation: "Res. BCB 229/2022",
   },
 
   contraparte: {
     description:
       "Classificação da contraparte que determina o FPR base: soberano, instituição financeira, corporate, pessoa física, setor público, etc.",
-    article: "Arts. 27-66",
+    article: "Arts. 27-66 (seção completa de FPRs por contraparte)",
     regulation: "Res. BCB 229/2022",
   },
 
   moedaExposicao: {
     description:
       "Moeda na qual a exposição está denominada. Relevante para cálculo de descasamento cambial.",
-    article: "Arts. 11-12",
+    article: "Arts. 45-46, 51-52 (ajuste cambial por classe)",
     regulation: "Res. BCB 229/2022",
   },
 
   moedaRenda: {
     description:
       "Moeda na qual a contraparte aufere sua renda principal. Usado para identificar descasamento cambial.",
-    article: "Arts. 11-12",
+    article: "Arts. 45-46, 51-52 (ajuste cambial por classe)",
     regulation: "Res. BCB 229/2022",
   },
 
   hedge90: {
     description:
-      "Indica se existe hedge cambial que cubra pelo menos 90% do descasamento. Se sim, não há ajuste de FPR por descasamento cambial.",
-    article: "Art. 12",
+      "Indica se existe hedge cambial que cubra pelo menos 90% do descasamento. Se sim, não há ajuste de FPR por descasamento cambial. APLICÁVEL APENAS A: varejo elegível e imobiliário residencial (ajuste FPR × 1,5, máx. 150%).",
+    article: "Arts. 45-46, 51-52 (ajuste cambial para varejo/imobiliário)",
     regulation: "Res. BCB 229/2022",
   },
 
@@ -101,7 +101,7 @@ export const TOOLTIPS: TooltipDefinitions = {
   varejoElegivel: {
     description:
       "Exposição total com mesmo cliente ≤ R$ 5 milhões (atualização 2024). FPR base de 75%.",
-    article: "Arts. 43-44",
+    article: "Arts. 43-47",
     regulation: "Res. BCB 229/2022",
   },
 
@@ -130,28 +130,28 @@ export const TOOLTIPS: TooltipDefinitions = {
   tipoImovel: {
     description:
       "Classificação do imóvel dado em garantia: residencial ou não residencial (comercial). Determina tabela LTV aplicável.",
-    article: "Arts. 48-54",
+    article: "Arts. 48-54 (48-52: residencial, 53-54: não residencial)",
     regulation: "Res. BCB 229/2022",
   },
 
   dependenciaFluxo: {
     description:
       "Indica se há dependência significativa do fluxo de caixa gerado pelo imóvel para pagamento da dívida. Aumenta FPRs.",
-    article: "Arts. 48-54",
+    article: "Arts. 48-54 (48-52: residencial, 53-54: não residencial)",
     regulation: "Res. BCB 229/2022",
   },
 
   ltv: {
     description:
       "Loan-to-Value: percentual entre o saldo devedor e o valor de avaliação da garantia. Determina FPR por faixas.",
-    article: "Arts. 48-54",
+    article: "Arts. 48-54 (48-52: residencial, 53-54: não residencial)",
     regulation: "Res. BCB 229/2022",
   },
 
   garantiaElegivel: {
     description:
       "Garantia atende requisitos de elegibilidade (alienação fiduciária, hipoteca, etc.). Necessário para aplicar FPR imobiliário.",
-    article: "Arts. 48-49",
+    article: "Art. 49",
     regulation: "Res. BCB 229/2022",
   },
 
@@ -216,14 +216,14 @@ export const TOOLTIPS: TooltipDefinitions = {
   tipoSetorPublico: {
     description:
       "Tipo de entidade do setor público: estado, município, DF, PSP (prestador de serviço público) ou estatal.",
-    article: "Arts. 29-30",
+    article: "Art. 29",
     regulation: "Res. BCB 229/2022",
   },
 
   ratingSetorPublico: {
     description:
       "Rating da entidade pública. Se tiver rating, usa tabela de soberanos. Sem rating, FPR de 100%.",
-    article: "Arts. 29-30",
+    article: "Art. 29",
     regulation: "Res. BCB 229/2022",
   },
 
@@ -325,9 +325,9 @@ export const TOOLTIPS: TooltipDefinitions = {
 
   ajusteNegativoPL: {
     description:
-      "Ajuste negativo registrado no patrimônio líquido em valor absoluto. Atualização 2025: FPR de 100%.",
-    article: "Res. BCB 452/2025",
-    regulation: "Res. BCB 452/2025",
+      "Ajuste negativo registrado no patrimônio líquido em valor absoluto. FPR de 100% (regulamentação em vigor a partir de 2025).",
+    article: "Res. BCB 452/2025 (ou norma vigente)",
+    regulation: "Res. BCB 452/2025 (ou norma vigente)",
   },
 
   // ===== PISOS =====

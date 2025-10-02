@@ -74,7 +74,7 @@ export default function App() {
         {/* Coluna 1 e 2: Formulários */}
         <div className="lg:col-span-2 grid gap-6">
           {/* Identificação */}
-          <Card title="Identificação" subtitle="Produto, contraparte e moeda">
+          <Card title="Identificação" subtitle="Produto e contraparte">
             <Row>
               <FieldGroup label="Produto" tooltip={TOOLTIPS.produto}>
                 <Select
@@ -108,7 +108,12 @@ export default function App() {
                   <option value="setor_publico">Setor Público</option>
                 </Select>
               </FieldGroup>
+            </Row>
+          </Card>
 
+          {/* Descasamento Cambial */}
+          <Card title="Descasamento Cambial" subtitle="Ajuste de FPR por moeda">
+            <Row>
               <FieldGroup label="Moeda Exposição" tooltip={TOOLTIPS.moedaExposicao}>
                 <Select
                   value={inputs.moedaExposicao}
@@ -120,9 +125,7 @@ export default function App() {
                   <option value="Outra">Outra</option>
                 </Select>
               </FieldGroup>
-            </Row>
 
-            <Row>
               <FieldGroup label="Moeda Renda" tooltip={TOOLTIPS.moedaRenda}>
                 <Select
                   value={inputs.moedaRenda}
@@ -140,6 +143,9 @@ export default function App() {
                   checked={inputs.hedge90}
                   onChange={(v) => updateField("hedge90", v)}
                 />
+                <Helper>
+                  Ajuste cambial (FPR × 1,5, máx. 150%) aplicável apenas a varejo elegível e imobiliário residencial
+                </Helper>
               </FieldGroup>
             </Row>
           </Card>

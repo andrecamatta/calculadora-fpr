@@ -239,16 +239,17 @@ function calcularIF(inputs: FPRInputs, steps: string[]): FPRBaseResult | null {
 
   if (contraparte !== "if") return null;
 
-  const { categoria, prazo90, tier1High, lrHigh, comercioExteriorAte1Ano } = ifinfo;
+  const { categoria, prazo90, tier1High, lrHigh, comercioExteriorAte1Ano, nettingElegivel } = ifinfo;
 
   let fpr: number = IF_FPR.C.default;
 
   if (categoria === "A") {
-    // Ordem de precedência conforme Res. BCB 229:
+    // Ordem de precedência conforme Res. BCB 229 (Arts. 32-35):
     // 1º) Comércio exterior ≤ 1 ano (FPR 20%)
     // 2º) Tier1 ≥ 14% E LR ≥ 5% (FPR 30%)
-    // 3º) Prazo ≤ 90d (FPR 20%)
-    // 4º) Prazo > 90d (FPR 40%)
+    // 3º) Netting elegível (FPR 40%)
+    // 4º) Prazo ≤ 90d (FPR 20%)
+    // 5º) Prazo > 90d (FPR 40%)
 
     if (comercioExteriorAte1Ano) {
       fpr = IF_FPR.A.comercioExterior; // 20%
@@ -256,6 +257,9 @@ function calcularIF(inputs: FPRInputs, steps: string[]): FPRBaseResult | null {
     } else if (tier1High && lrHigh) {
       fpr = IF_FPR.A.tier1LRAlto; // 30%
       steps.push("IF categoria A ⇒ Tier1≥14% E LR≥5%: 30%");
+    } else if (nettingElegivel) {
+      fpr = IF_FPR.A.netting; // 40%
+      steps.push("IF categoria A ⇒ acordo de netting elegível: 40%");
     } else if (prazo90) {
       fpr = IF_FPR.A.prazo90; // 20%
       steps.push("IF categoria A ⇒ prazo ≤90d: 20%");
@@ -264,16 +268,21 @@ function calcularIF(inputs: FPRInputs, steps: string[]): FPRBaseResult | null {
       steps.push("IF categoria A ⇒ prazo >90d: 40%");
     }
   } else if (categoria === "B") {
-    fpr = prazo90 ? IF_FPR.B.prazo90 : IF_FPR.B.prazoMaior90;
+    // Ordem de precedência para categoria B:
+    // 1º) Comércio exterior ≤ 1 ano (FPR 50%)
+    // 2º) Netting elegível (FPR 75%)
+    // 3º) Prazo ≤ 90d (FPR 50%) / Prazo > 90d (FPR 75%)
 
     if (comercioExteriorAte1Ano) {
-      fpr = IF_FPR.B.comercioExterior;
+      fpr = IF_FPR.B.comercioExterior; // 50%
+      steps.push("IF categoria B ⇒ comércio exterior ≤1 ano: 50%");
+    } else if (nettingElegivel) {
+      fpr = IF_FPR.B.netting; // 75%
+      steps.push("IF categoria B ⇒ acordo de netting elegível: 75%");
+    } else {
+      fpr = prazo90 ? IF_FPR.B.prazo90 : IF_FPR.B.prazoMaior90;
+      steps.push(`IF categoria B ⇒ ${prazo90 ? "≤90d: 50%" : ">90d: 75%"}`);
     }
-
-    steps.push(
-      `IF categoria B ⇒ ${prazo90 ? "≤90d" : ">90d"}: ${fpr}%` +
-        (comercioExteriorAte1Ano ? " (comércio ext. ≤1 ano)" : "")
-    );
   } else {
     steps.push("IF categoria C ⇒ FPR 150%");
   }

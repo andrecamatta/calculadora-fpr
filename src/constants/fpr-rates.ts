@@ -5,7 +5,7 @@
 
 import { RatingBucket } from "../types";
 
-// FPR Soberanos por rating (Art. 30)
+// FPR Soberanos por rating (Arts. 27-30: BR/BCB, multilaterais, estrangeiros)
 export const SOBERANO_FPR: Record<RatingBucket, number> = {
   "AAA_AA-": 0,
   "A+_A-": 20,
@@ -53,7 +53,7 @@ export const VAREJO_FPR = {
   limiteMaximo: 5_000_000, // R$ 5MM (atualização 2024)
 } as const;
 
-// FPR Imobiliário Residencial (Art. 48-52)
+// FPR Imobiliário Residencial (Arts. 48-52)
 // LTV ladders sem dependência do fluxo
 export const IMOB_RES_SEM_DEP = [
   { maxLTV: 10, fpr: 20 },
@@ -78,14 +78,14 @@ export const IMOB_RES_COM_DEP = [
   { maxLTV: 200, fpr: 150 },
 ] as const;
 
-// FPR Imobiliário Não Residencial (Art. 53-54)
+// FPR Imobiliário Não Residencial (Arts. 53-54)
 export const IMOB_NAO_RES_FPR = {
   semDependenciaLTV60: 60,
   comDependenciaLTV60: 70,
   comDependenciaLTVMaior60: 100, // Corrigido: era 90%, deve ser 100% conforme Res. BCB 229
 } as const;
 
-// FPR Especiais (Art. 55-65)
+// FPR Especiais (Arts. 59-62: subordinado, equity, crédito tributário)
 export const ESPECIAIS_FPR = {
   subordinado: 150,
   equity250: 250,
@@ -93,7 +93,7 @@ export const ESPECIAIS_FPR = {
   creditoTributario100: 100,
   creditoTributario600: 600,
   creditoTributario1250: 1250,
-  ajusteNegativoPL: 100, // Res. BCB 452/2025
+  ajusteNegativoPL: 100, // Res. BCB 452/2025 (ou norma vigente)
 } as const;
 
 // Pisos regulatórios
@@ -151,7 +151,7 @@ export const IMOB_OBRA_ANDAMENTO_FPR = {
   contratoApos2024: 150, // ou FPR do devedor quando aplicável
 } as const;
 
-// FPR Fundos por Tipo (Mandato)
+// FPR Fundos por Tipo (Arts. 55-58: look-through, mandato, regulamento)
 export const FUNDOS_MANDATO_FPR = {
   equity: 400,
   fixedIncome: 100,
