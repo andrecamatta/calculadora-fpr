@@ -35,9 +35,9 @@ interface CardProps {
 }
 
 export const Card: React.FC<CardProps> = ({ title, subtitle, children, className = "" }) => (
-  <div className={`rounded-2xl border p-3 shadow-sm bg-white/5 ${className}`}>
+  <div className={`rounded-2xl border p-2.5 shadow-sm bg-white/5 ${className}`}>
     {title && <h3 className="font-medium mb-1">{title}</h3>}
-    {subtitle && <p className="text-sm text-neutral-500 mb-2">{subtitle}</p>}
+    {subtitle && <p className="text-sm text-neutral-500 mb-1.5">{subtitle}</p>}
     {children}
   </div>
 );

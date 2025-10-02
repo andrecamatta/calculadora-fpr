@@ -244,44 +244,74 @@ function calcularIF(inputs: FPRInputs, steps: string[]): FPRBaseResult | null {
   let fpr: number = IF_FPR.C.default;
 
   if (categoria === "A") {
-    // Ordem de precedência conforme Res. BCB 229 (Arts. 32-35):
-    // 1º) Comércio exterior ≤ 1 ano (FPR 20%)
-    // 2º) Tier1 ≥ 14% E LR ≥ 5% (FPR 30%)
-    // 3º) Netting elegível (FPR 40%)
-    // 4º) Prazo ≤ 90d (FPR 20%)
-    // 5º) Prazo > 90d (FPR 40%)
+    // Precedência conforme Art. 33 da Res. BCB 229/2022:
+    // 1º) Comércio exterior SEMPRE tem prioridade (FPR 20%)
+    // 2º) Para demais características, aplicar o MENOR FPR (mais favorável)
+    //     - Prazo é característica BASE da operação
+    //     - Tier1/LR e netting são modificadores/mitigadores
 
     if (comercioExteriorAte1Ano) {
       fpr = IF_FPR.A.comercioExterior; // 20%
       steps.push("IF categoria A ⇒ comércio exterior ≤1 ano: 20%");
-    } else if (tier1High && lrHigh) {
-      fpr = IF_FPR.A.tier1LRAlto; // 30%
-      steps.push("IF categoria A ⇒ Tier1≥14% E LR≥5%: 30%");
-    } else if (nettingElegivel) {
-      fpr = IF_FPR.A.netting; // 40%
-      steps.push("IF categoria A ⇒ acordo de netting elegível: 40%");
-    } else if (prazo90) {
-      fpr = IF_FPR.A.prazo90; // 20%
-      steps.push("IF categoria A ⇒ prazo ≤90d: 20%");
     } else {
-      fpr = IF_FPR.A.prazoMaior90; // 40%
-      steps.push("IF categoria A ⇒ prazo >90d: 40%");
+      // Aplicar menor FPR entre características aplicáveis
+      const candidatos: number[] = [];
+      const caracteristicas: string[] = [];
+
+      // Prazo é base
+      if (prazo90) {
+        candidatos.push(IF_FPR.A.prazo90);
+        caracteristicas.push("prazo ≤90d (20%)");
+      } else {
+        candidatos.push(IF_FPR.A.prazoMaior90);
+        caracteristicas.push("prazo >90d (40%)");
+      }
+
+      // Tier1/LR como mitigador
+      if (tier1High && lrHigh) {
+        candidatos.push(IF_FPR.A.tier1LRAlto);
+        caracteristicas.push("Tier1≥14% E LR≥5% (30%)");
+      }
+
+      // Netting como mitigador
+      if (nettingElegivel) {
+        candidatos.push(IF_FPR.A.netting);
+        caracteristicas.push("netting elegível (40%)");
+      }
+
+      fpr = Math.min(...candidatos);
+      steps.push(`IF categoria A ⇒ ${caracteristicas.join(" + ")} → FPR ${fpr}%`);
     }
   } else if (categoria === "B") {
-    // Ordem de precedência para categoria B:
-    // 1º) Comércio exterior ≤ 1 ano (FPR 50%)
-    // 2º) Netting elegível (FPR 75%)
-    // 3º) Prazo ≤ 90d (FPR 50%) / Prazo > 90d (FPR 75%)
+    // Precedência conforme Art. 34 da Res. BCB 229/2022:
+    // 1º) Comércio exterior SEMPRE tem prioridade (FPR 50%)
+    // 2º) Para demais características, aplicar o MENOR FPR (mais favorável)
 
     if (comercioExteriorAte1Ano) {
       fpr = IF_FPR.B.comercioExterior; // 50%
       steps.push("IF categoria B ⇒ comércio exterior ≤1 ano: 50%");
-    } else if (nettingElegivel) {
-      fpr = IF_FPR.B.netting; // 75%
-      steps.push("IF categoria B ⇒ acordo de netting elegível: 75%");
     } else {
-      fpr = prazo90 ? IF_FPR.B.prazo90 : IF_FPR.B.prazoMaior90;
-      steps.push(`IF categoria B ⇒ ${prazo90 ? "≤90d: 50%" : ">90d: 75%"}`);
+      // Aplicar menor FPR entre características aplicáveis
+      const candidatos: number[] = [];
+      const caracteristicas: string[] = [];
+
+      // Prazo é base
+      if (prazo90) {
+        candidatos.push(IF_FPR.B.prazo90);
+        caracteristicas.push("prazo ≤90d (50%)");
+      } else {
+        candidatos.push(IF_FPR.B.prazoMaior90);
+        caracteristicas.push("prazo >90d (75%)");
+      }
+
+      // Netting como mitigador
+      if (nettingElegivel) {
+        candidatos.push(IF_FPR.B.netting);
+        caracteristicas.push("netting elegível (75%)");
+      }
+
+      fpr = Math.min(...candidatos);
+      steps.push(`IF categoria B ⇒ ${caracteristicas.join(" + ")} → FPR ${fpr}%`);
     }
   } else {
     steps.push("IF categoria C ⇒ FPR 150%");

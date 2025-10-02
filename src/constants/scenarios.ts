@@ -61,6 +61,8 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     hedge90: false,
   }),
 
+  // ===== IF - Testes de Precedência =====
+
   "IF cat A ≤90d (Tier1/LR ok)": (_) => ({
     produto: "emprestimo",
     contraparte: "if",
@@ -85,6 +87,83 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
       nettingElegivel: false,
       comercioExteriorAte1Ano: true,
     },
+  }),
+
+  // CENÁRIOS CRÍTICOS DE PRECEDÊNCIA:
+
+  "🔍 IF A: Tier1/LR + Prazo≤90d": (_) => ({
+    produto: "emprestimo",
+    contraparte: "if",
+    ifinfo: {
+      categoria: "A",
+      prazo90: true,            // 20%
+      tier1High: true,           // 30%
+      lrHigh: true,
+      nettingElegivel: false,
+      comercioExteriorAte1Ano: false,
+    },
+    // Atual: 30% (tier1/LR tem precedência)
+    // Deveria?: 20% (prazo melhor) ou 30%?
+  }),
+
+  "🔍 IF A: Netting + Prazo≤90d": (_) => ({
+    produto: "emprestimo",
+    contraparte: "if",
+    ifinfo: {
+      categoria: "A",
+      prazo90: true,            // 20%
+      tier1High: false,
+      lrHigh: false,
+      nettingElegivel: true,    // 40%
+      comercioExteriorAte1Ano: false,
+    },
+    // Atual: 40% (netting tem precedência)
+    // Deveria?: 20% (prazo melhor) ou 40%?
+  }),
+
+  "🔍 IF A: Comércio Ext. + Tier1/LR": (_) => ({
+    produto: "emprestimo",
+    contraparte: "if",
+    ifinfo: {
+      categoria: "A",
+      prazo90: false,
+      tier1High: true,           // 30%
+      lrHigh: true,
+      nettingElegivel: false,
+      comercioExteriorAte1Ano: true,  // 20%
+    },
+    // Atual: 20% (comércio exterior)
+    // Deveria: 20% ✅ (comércio tem prioridade máxima)
+  }),
+
+  "🔍 IF A: TUDO marcado": (_) => ({
+    produto: "emprestimo",
+    contraparte: "if",
+    ifinfo: {
+      categoria: "A",
+      prazo90: true,            // 20%
+      tier1High: true,           // 30%
+      lrHigh: true,
+      nettingElegivel: true,    // 40%
+      comercioExteriorAte1Ano: true,  // 20%
+    },
+    // Atual: 20% (comércio exterior tem precedência)
+    // Deveria: 20% ✅ (comércio tem prioridade máxima)
+  }),
+
+  "🔍 IF B: Netting + Prazo≤90d": (_) => ({
+    produto: "emprestimo",
+    contraparte: "if",
+    ifinfo: {
+      categoria: "B",
+      prazo90: true,            // 50%
+      tier1High: false,
+      lrHigh: false,
+      nettingElegivel: true,    // 75%
+      comercioExteriorAte1Ano: false,
+    },
+    // Atual: 75% (netting tem precedência)
+    // Deveria?: 50% (prazo melhor) ou 75%?
   }),
 
   "Derivativo contra corporate": (_) => ({
