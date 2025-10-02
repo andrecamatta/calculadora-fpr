@@ -145,188 +145,228 @@ export default function App() {
             </Row>
           </Card>
 
-          {/* Corporate / Varejo */}
-          <Card title="Corporate / Varejo">
+          {/* Inadimplência - PRIORIDADE MÁXIMA */}
+          <Card title="Inadimplência / Ativos Problemáticos">
             <Row>
-              <FieldGroup label="Grande baixo risco">
+              <FieldGroup label="Em inadimplência?">
                 <Switch
-                  checked={inputs.corporate.grandeBaixoRisco}
+                  checked={inputs.inadimplencia.emInadimplencia}
                   onChange={(v) =>
-                    updateNested("corporate", "grandeBaixoRisco", v)
+                    updateNested("inadimplencia", "emInadimplencia", v)
                   }
                 />
-                <Helper>Receita ≥ R$ 15bi + rating ≥ BB-</Helper>
+                <Helper>PRIORIDADE MÁXIMA - sobrepõe todos os outros cálculos</Helper>
               </FieldGroup>
 
-              <FieldGroup label="PME">
-                <Switch
-                  checked={inputs.corporate.pme}
-                  onChange={(v) => updateNested("corporate", "pme", v)}
-                />
-                <Helper>Receita ≤ R$ 300MM</Helper>
-              </FieldGroup>
-
-              <FieldGroup label="Financiamento especializado">
-                <Select
-                  value={inputs.corporate.financiamento}
-                  onChange={(v) => updateNested("corporate", "financiamento", v)}
-                >
-                  <option value="nenhum">Nenhum</option>
-                  <option value="objeto">Objeto específico</option>
-                  <option value="commodities">Commodities</option>
-                  <option value="project">Project finance</option>
-                </Select>
-              </FieldGroup>
-            </Row>
-
-            <Row>
-              <FieldGroup label="Receita anual (R$)">
-                <Input
-                  type="number"
-                  value={inputs.corporate.receitaAnual ?? ""}
-                  onChange={(v) =>
-                    updateNested("corporate", "receitaAnual", v ? Number(v) : undefined)
-                  }
-                  placeholder="Ex: 250000000"
-                />
-                <Helper>Para validação PME/Grande baixo risco</Helper>
-              </FieldGroup>
-
-              <FieldGroup label="Rating">
-                <Select
-                  value={inputs.corporate.rating ?? ""}
-                  onChange={(v) =>
-                    updateNested("corporate", "rating", v || undefined)
-                  }
-                >
-                  <option value="">Sem rating</option>
-                  <option value="AAA_AA-">AAA a AA-</option>
-                  <option value="A+_A-">A+ a A-</option>
-                  <option value="BBB+_BBB-">BBB+ a BBB-</option>
-                  <option value="BB+_B-">BB+ a B-</option>
-                  <option value="inferior_B-">Inferior a B-</option>
-                </Select>
-                <Helper>Para validação Grande baixo risco</Helper>
-              </FieldGroup>
-            </Row>
-
-            <Row>
-              <FieldGroup label="Varejo elegível">
-                <Switch
-                  checked={inputs.varejo.elegivel}
-                  onChange={(v) => updateNested("varejo", "elegivel", v)}
-                />
-                <Helper>Total exposição ≤ R$ 5MM (atualização 2024)</Helper>
-              </FieldGroup>
-
-              <FieldGroup label="Transactor (360d)">
-                <Switch
-                  checked={inputs.varejo.transactor}
-                  onChange={(v) => updateNested("varejo", "transactor", v)}
-                />
-              </FieldGroup>
-
-              <FieldGroup label="Linha sem saques 360d">
-                <Switch
-                  checked={inputs.varejo.linhaSemSaques360}
-                  onChange={(v) =>
-                    updateNested("varejo", "linhaSemSaques360", v)
-                  }
-                />
-              </FieldGroup>
-            </Row>
-
-            <Row>
-              <FieldGroup label="Consignado - prazo (anos)">
-                <Input
-                  type="number"
-                  value={inputs.varejo.consignadoPrazoAnos ?? ""}
-                  onChange={(v) =>
-                    updateNested("varejo", "consignadoPrazoAnos", v ? Number(v) : undefined)
-                  }
-                  placeholder="Ex: 7"
-                />
-                <Helper>Se &gt; 5 anos: FPR 150% (vs 300% anterior)</Helper>
-              </FieldGroup>
+              {inputs.inadimplencia.emInadimplencia && (
+                <FieldGroup label="Provisão (%)">
+                  <Input
+                    type="number"
+                    value={inputs.inadimplencia.provisaoPercentual}
+                    onChange={(v) =>
+                      updateNested("inadimplencia", "provisaoPercentual", Number(v))
+                    }
+                    placeholder="0-100"
+                  />
+                  <Helper>
+                    &lt;20%: FPR 150% | 20-50%: FPR 100% | ≥50%: FPR 50%
+                  </Helper>
+                </FieldGroup>
+              )}
             </Row>
           </Card>
 
-          {/* Imobiliário */}
-          <Card title="Crédito Imobiliário">
-            <Row>
-              <FieldGroup label="Tipo de imóvel">
-                <Select
-                  value={inputs.imobiliario.tipo}
-                  onChange={(v) => updateNested("imobiliario", "tipo", v)}
-                >
-                  <option value="residencial">Residencial</option>
-                  <option value="nao_residencial">Não residencial</option>
-                </Select>
-              </FieldGroup>
-
-              <FieldGroup label="Dependência do fluxo">
-                <Switch
-                  checked={inputs.imobiliario.dependenciaFluxo}
-                  onChange={(v) =>
-                    updateNested("imobiliario", "dependenciaFluxo", v)
-                  }
-                />
-              </FieldGroup>
-
-              <FieldGroup label="LTV (%)">
-                <Input
-                  type="number"
-                  value={inputs.imobiliario.ltv}
-                  onChange={(v) => updateNested("imobiliario", "ltv", Number(v))}
-                  placeholder="0-200"
-                />
-              </FieldGroup>
-            </Row>
-
-            <Row>
-              <FieldGroup label="Garantia elegível">
-                <Switch
-                  checked={inputs.imobiliario.garantiaElegivel}
-                  onChange={(v) =>
-                    updateNested("imobiliario", "garantiaElegivel", v)
-                  }
-                />
-              </FieldGroup>
-
-              <FieldGroup label="Imóvel concluído">
-                <Switch
-                  checked={inputs.imobiliario.imovelConcluido}
-                  onChange={(v) =>
-                    updateNested("imobiliario", "imovelConcluido", v)
-                  }
-                />
-              </FieldGroup>
-            </Row>
-
-            {!inputs.imobiliario.imovelConcluido && (
+          {/* Corporate */}
+          {inputs.contraparte === "corporate" && (
+            <Card title="Corporate / Empresa Não Financeira">
               <Row>
-                <FieldGroup label="Contrato até 2023">
+                <FieldGroup label="Grande baixo risco">
                   <Switch
-                    checked={inputs.imobiliario.contratoAte2023 ?? false}
+                    checked={inputs.corporate.grandeBaixoRisco}
                     onChange={(v) =>
-                      updateNested("imobiliario", "contratoAte2023", v)
+                      updateNested("corporate", "grandeBaixoRisco", v)
                     }
                   />
-                  <Helper>Obra em andamento: FPR 50%</Helper>
+                  <Helper>Receita ≥ R$ 15bi + rating ≥ BB-</Helper>
                 </FieldGroup>
 
-                <FieldGroup label="Contrato após 2024">
+                <FieldGroup label="PME">
                   <Switch
-                    checked={inputs.imobiliario.contratoApos2024 ?? false}
-                    onChange={(v) =>
-                      updateNested("imobiliario", "contratoApos2024", v)
-                    }
+                    checked={inputs.corporate.pme}
+                    onChange={(v) => updateNested("corporate", "pme", v)}
                   />
-                  <Helper>Obra em andamento: FPR 150%</Helper>
+                  <Helper>Receita ≤ R$ 300MM</Helper>
+                </FieldGroup>
+
+                <FieldGroup label="Financiamento especializado">
+                  <Select
+                    value={inputs.corporate.financiamento}
+                    onChange={(v) => updateNested("corporate", "financiamento", v)}
+                  >
+                    <option value="nenhum">Nenhum</option>
+                    <option value="objeto">Objeto específico</option>
+                    <option value="commodities">Commodities</option>
+                    <option value="project">Project finance</option>
+                  </Select>
                 </FieldGroup>
               </Row>
-            )}
-          </Card>
+
+              <Row>
+                <FieldGroup label="Receita anual (R$)">
+                  <Input
+                    type="number"
+                    value={inputs.corporate.receitaAnual ?? ""}
+                    onChange={(v) =>
+                      updateNested("corporate", "receitaAnual", v ? Number(v) : undefined)
+                    }
+                    placeholder="Ex: 250000000"
+                  />
+                  <Helper>Para validação PME/Grande baixo risco</Helper>
+                </FieldGroup>
+
+                <FieldGroup label="Rating">
+                  <Select
+                    value={inputs.corporate.rating ?? ""}
+                    onChange={(v) =>
+                      updateNested("corporate", "rating", v || undefined)
+                    }
+                  >
+                    <option value="">Sem rating</option>
+                    <option value="AAA_AA-">AAA a AA-</option>
+                    <option value="A+_A-">A+ a A-</option>
+                    <option value="BBB+_BBB-">BBB+ a BBB-</option>
+                    <option value="BB+_B-">BB+ a B-</option>
+                    <option value="inferior_B-">Inferior a B-</option>
+                  </Select>
+                  <Helper>Para validação Grande baixo risco</Helper>
+                </FieldGroup>
+              </Row>
+            </Card>
+          )}
+
+          {/* Varejo */}
+          {inputs.contraparte === "pf" && (
+            <Card title="Varejo / Pessoa Física">
+              <Row>
+                <FieldGroup label="Varejo elegível">
+                  <Switch
+                    checked={inputs.varejo.elegivel}
+                    onChange={(v) => updateNested("varejo", "elegivel", v)}
+                  />
+                  <Helper>Total exposição ≤ R$ 5MM (atualização 2024)</Helper>
+                </FieldGroup>
+
+                <FieldGroup label="Transactor (360d)">
+                  <Switch
+                    checked={inputs.varejo.transactor}
+                    onChange={(v) => updateNested("varejo", "transactor", v)}
+                  />
+                </FieldGroup>
+
+                <FieldGroup label="Linha sem saques 360d">
+                  <Switch
+                    checked={inputs.varejo.linhaSemSaques360}
+                    onChange={(v) =>
+                      updateNested("varejo", "linhaSemSaques360", v)
+                    }
+                  />
+                </FieldGroup>
+              </Row>
+
+              <Row>
+                <FieldGroup label="Consignado - prazo (anos)">
+                  <Input
+                    type="number"
+                    value={inputs.varejo.consignadoPrazoAnos ?? ""}
+                    onChange={(v) =>
+                      updateNested("varejo", "consignadoPrazoAnos", v ? Number(v) : undefined)
+                    }
+                    placeholder="Ex: 7"
+                  />
+                  <Helper>Se &gt; 5 anos: FPR 150% (vs 300% anterior)</Helper>
+                </FieldGroup>
+              </Row>
+            </Card>
+          )}
+
+          {/* Imobiliário */}
+          {inputs.produto === "credito_imobiliario" && (
+            <Card title="Crédito Imobiliário">
+              <Row>
+                <FieldGroup label="Tipo de imóvel">
+                  <Select
+                    value={inputs.imobiliario.tipo}
+                    onChange={(v) => updateNested("imobiliario", "tipo", v)}
+                  >
+                    <option value="residencial">Residencial</option>
+                    <option value="nao_residencial">Não residencial</option>
+                  </Select>
+                </FieldGroup>
+
+                <FieldGroup label="Dependência do fluxo">
+                  <Switch
+                    checked={inputs.imobiliario.dependenciaFluxo}
+                    onChange={(v) =>
+                      updateNested("imobiliario", "dependenciaFluxo", v)
+                    }
+                  />
+                </FieldGroup>
+
+                <FieldGroup label="LTV (%)">
+                  <Input
+                    type="number"
+                    value={inputs.imobiliario.ltv}
+                    onChange={(v) => updateNested("imobiliario", "ltv", Number(v))}
+                    placeholder="0-200"
+                  />
+                </FieldGroup>
+              </Row>
+
+              <Row>
+                <FieldGroup label="Garantia elegível">
+                  <Switch
+                    checked={inputs.imobiliario.garantiaElegivel}
+                    onChange={(v) =>
+                      updateNested("imobiliario", "garantiaElegivel", v)
+                    }
+                  />
+                </FieldGroup>
+
+                <FieldGroup label="Imóvel concluído">
+                  <Switch
+                    checked={inputs.imobiliario.imovelConcluido}
+                    onChange={(v) =>
+                      updateNested("imobiliario", "imovelConcluido", v)
+                    }
+                  />
+                </FieldGroup>
+              </Row>
+
+              {!inputs.imobiliario.imovelConcluido && (
+                <Row>
+                  <FieldGroup label="Contrato até 2023">
+                    <Switch
+                      checked={inputs.imobiliario.contratoAte2023 ?? false}
+                      onChange={(v) =>
+                        updateNested("imobiliario", "contratoAte2023", v)
+                      }
+                    />
+                    <Helper>Obra em andamento: FPR 50%</Helper>
+                  </FieldGroup>
+
+                  <FieldGroup label="Contrato após 2024">
+                    <Switch
+                      checked={inputs.imobiliario.contratoApos2024 ?? false}
+                      onChange={(v) =>
+                        updateNested("imobiliario", "contratoApos2024", v)
+                      }
+                    />
+                    <Helper>Obra em andamento: FPR 150%</Helper>
+                  </FieldGroup>
+                </Row>
+              )}
+            </Card>
+          )}
 
           {/* IF */}
           {inputs.contraparte === "if" && (
@@ -487,37 +527,6 @@ export default function App() {
               </Row>
             </Card>
           )}
-
-          {/* Inadimplência */}
-          <Card title="Inadimplência / Ativos Problemáticos">
-            <Row>
-              <FieldGroup label="Em inadimplência?">
-                <Switch
-                  checked={inputs.inadimplencia.emInadimplencia}
-                  onChange={(v) =>
-                    updateNested("inadimplencia", "emInadimplencia", v)
-                  }
-                />
-                <Helper>PRIORIDADE MÁXIMA - sobrepõe todos os outros cálculos</Helper>
-              </FieldGroup>
-
-              {inputs.inadimplencia.emInadimplencia && (
-                <FieldGroup label="Provisão (%)">
-                  <Input
-                    type="number"
-                    value={inputs.inadimplencia.provisaoPercentual}
-                    onChange={(v) =>
-                      updateNested("inadimplencia", "provisaoPercentual", Number(v))
-                    }
-                    placeholder="0-100"
-                  />
-                  <Helper>
-                    &lt;20%: FPR 150% | 20-50%: FPR 100% | ≥50%: FPR 50%
-                  </Helper>
-                </FieldGroup>
-              )}
-            </Row>
-          </Card>
 
           {/* EAD */}
           <Card title="EAD (Exposure at Default)">
