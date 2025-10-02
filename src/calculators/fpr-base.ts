@@ -185,6 +185,14 @@ function calcularSoberano(
   }
 
   if (contraparte === "soberano_estrangeiro") {
+    // Validação: soberano estrangeiro deve ter rating
+    if (!soberano.ratingBucket) {
+      steps.push(
+        "⚠️ Soberano estrangeiro sem rating ⇒ FPR conservador 150% (conforme Basel)"
+      );
+      return { fpr: 150, classe: "soberano_estrangeiro_sem_rating" };
+    }
+
     const fpr = SOBERANO_FPR[soberano.ratingBucket];
     steps.push(
       `Soberano estrangeiro (bucket ${soberano.ratingBucket}) ⇒ FPR ${fpr}%`
@@ -236,21 +244,25 @@ function calcularIF(inputs: FPRInputs, steps: string[]): FPRBaseResult | null {
   let fpr: number = IF_FPR.C.default;
 
   if (categoria === "A") {
-    fpr = prazo90 ? IF_FPR.A.prazo90 : IF_FPR.A.prazoMaior90;
-
-    if (tier1High && lrHigh) {
-      fpr = IF_FPR.A.tier1LRAlto;
-    }
+    // Ordem de precedência conforme Res. BCB 229:
+    // 1º) Comércio exterior ≤ 1 ano (FPR 20%)
+    // 2º) Tier1 ≥ 14% E LR ≥ 5% (FPR 30%)
+    // 3º) Prazo ≤ 90d (FPR 20%)
+    // 4º) Prazo > 90d (FPR 40%)
 
     if (comercioExteriorAte1Ano) {
-      fpr = IF_FPR.A.comercioExterior;
+      fpr = IF_FPR.A.comercioExterior; // 20%
+      steps.push("IF categoria A ⇒ comércio exterior ≤1 ano: 20%");
+    } else if (tier1High && lrHigh) {
+      fpr = IF_FPR.A.tier1LRAlto; // 30%
+      steps.push("IF categoria A ⇒ Tier1≥14% E LR≥5%: 30%");
+    } else if (prazo90) {
+      fpr = IF_FPR.A.prazo90; // 20%
+      steps.push("IF categoria A ⇒ prazo ≤90d: 20%");
+    } else {
+      fpr = IF_FPR.A.prazoMaior90; // 40%
+      steps.push("IF categoria A ⇒ prazo >90d: 40%");
     }
-
-    steps.push(
-      `IF categoria A ⇒ ${prazo90 ? "≤90d" : ">90d"}: ${fpr}%` +
-        (tier1High && lrHigh ? " (Tier1≥14%, LR≥5%)" : "") +
-        (comercioExteriorAte1Ano ? " (comércio ext. ≤1 ano)" : "")
-    );
   } else if (categoria === "B") {
     fpr = prazo90 ? IF_FPR.B.prazo90 : IF_FPR.B.prazoMaior90;
 
@@ -329,10 +341,12 @@ function calcularImobiliario(
     // Não residencial
     if (!dependenciaFluxo) {
       if (ltv <= 60) {
+        // FPR = min(60%, FPR_devedor) conforme Res. BCB 229
+        // Retorna null para calcular FPR do devedor e depois aplicar mínimo
         steps.push(
-          "Imobiliário não residencial (sem dependência), LTV ≤ 60% ⇒ FPR 60% (ou FPR do devedor, o menor)"
+          "Imobiliário não residencial (sem dependência), LTV ≤ 60% ⇒ Aplicar min(60%, FPR devedor)"
         );
-        return { fpr: IMOB_NAO_RES_FPR.semDependenciaLTV60, classe: "imob_nr_sem_dep" };
+        return null; // Sinaliza que precisa calcular FPR devedor e aplicar min
       }
       steps.push(
         "Imobiliário não residencial (sem dependência), LTV > 60% ⇒ FPR do devedor"
@@ -462,8 +476,17 @@ function calcularFundos(
 
   // Look-through (preferencial)
   if (fundos.abordagem === "look-through" && typeof fundos.fprLookThrough === "number") {
-    steps.push(`Fundo (look-through) ⇒ FPR médio informado: ${fundos.fprLookThrough}%`);
-    return { fpr: fundos.fprLookThrough, classe: "fundo_lt" };
+    // Sanitização: FPR deve estar entre 0% e 1250%
+    const fprSanitizado = Math.min(Math.max(fundos.fprLookThrough, 0), 1250);
+
+    if (fprSanitizado !== fundos.fprLookThrough) {
+      steps.push(
+        `⚠️ FPR look-through (${fundos.fprLookThrough}%) fora dos limites, ajustado para ${fprSanitizado}%`
+      );
+    }
+
+    steps.push(`Fundo (look-through) ⇒ FPR médio informado: ${fprSanitizado}%`);
+    return { fpr: fprSanitizado, classe: "fundo_lt" };
   }
 
   // Mandato (baseado no tipo do fundo)
@@ -499,8 +522,15 @@ function calcularDerivativo(
   steps.push("Derivativo (CCR) ⇒ usar FPR da contraparte");
 
   // Recalcula FPR como se fosse exposição direta
-  const simulatedInputs = { ...inputs, produto: "outro" as const };
-  const result = computeFPRBase(simulatedInputs, steps);
+  // Usa "emprestimo" em vez de "outro" para evitar recursão infinita
+  const simulatedInputs = { ...inputs, produto: "emprestimo" as const };
+  const tempSteps: string[] = [];
+  const result = computeFPRBase(simulatedInputs, tempSteps);
+
+  // Adiciona os passos da contraparte, mas com prefixo
+  tempSteps.forEach(step => {
+    steps.push(`  └─ ${step}`);
+  });
 
   return { ...result, classe: "derivativo_ccr" };
 }
@@ -558,6 +588,30 @@ export function computeFPRBase(
   // 10. Derivativos
   const derivativo = calcularDerivativo(inputs, steps);
   if (derivativo) return derivativo;
+
+  // 11. Tratamento especial para imobiliário não residencial sem dependência e LTV ≤ 60%
+  // Aplica min(60%, FPR_devedor) quando imobiliário retornou null
+  if (
+    (inputs.produto === "credito_imobiliario" || inputs.imobiliario.garantiaElegivel) &&
+    inputs.imobiliario.tipo === "nao_residencial" &&
+    !inputs.imobiliario.dependenciaFluxo &&
+    inputs.imobiliario.imovelConcluido &&
+    inputs.imobiliario.ltv <= 60
+  ) {
+    // Calcula FPR do devedor (já foi calculado no fluxo acima, mas retornou null)
+    // Precisa recalcular sem considerar garantia imobiliária
+    const inputsSemImob = { ...inputs, imobiliario: { ...inputs.imobiliario, garantiaElegivel: false } };
+    const stepsDevedor: string[] = [];
+    const fprDevedor = computeFPRBase(inputsSemImob, stepsDevedor);
+
+    const fpr60 = IMOB_NAO_RES_FPR.semDependenciaLTV60;
+    const fprFinal = Math.min(fpr60, fprDevedor.fpr);
+
+    steps.push(`FPR devedor calculado: ${fprDevedor.fpr}%`);
+    steps.push(`FPR final = min(60%, ${fprDevedor.fpr}%) = ${fprFinal}%`);
+
+    return { fpr: fprFinal, classe: "imob_nr_sem_dep" };
+  }
 
   // Default conservador
   steps.push("Classe não mapeada ⇒ FPR conservador 100%");

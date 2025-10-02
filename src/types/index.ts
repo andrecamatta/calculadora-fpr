@@ -62,6 +62,25 @@ export type CCFTipo =
   | "comercio_exterior"
   | "outro";
 
+// CCF Detalhado (granularidade adicional)
+export type CCFDetalhadoTipo =
+  // Compromissos de crédito
+  | "compromisso_irrevogavel_ate1ano"
+  | "compromisso_irrevogavel_mais1ano"
+  | "compromisso_revogavel_incondicional"
+  | "compromisso_revogavel_condicional"
+  // Garantias
+  | "aval_fianca"
+  | "carta_credito"
+  | "garantia_performance"
+  // Securitização
+  | "securitizacao_linha_liquidez"
+  | "securitizacao_melhoria_credito"
+  // Varejo
+  | "cartao_revogavel"
+  | "cartao_irrevogavel"
+  | "limite_cheque_especial";
+
 export type ColateralTipo =
   | "deposito_vista"
   | "deposito_poupanca"
@@ -161,6 +180,7 @@ export interface EADInfo {
   saldoDevedor: number;
   limiteNaoUtilizado: number;
   ccfTipo: CCFTipo;
+  ccfDetalhadoTipo?: CCFDetalhadoTipo; // Granularidade adicional
   ccfCustom?: number; // Override manual
 }
 

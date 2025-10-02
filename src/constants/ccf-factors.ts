@@ -3,7 +3,7 @@
  * Para cálculo de EAD em exposições off-balance sheet
  */
 
-import { CCFTipo } from "../types";
+import { CCFTipo, CCFDetalhadoTipo } from "../types";
 
 // Fatores de Conversão de Crédito (Art. 13-17 Circ. 3.809)
 export const CCF_FACTORS: Record<CCFTipo, number> = {

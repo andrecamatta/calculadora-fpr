@@ -82,7 +82,7 @@ export const IMOB_RES_COM_DEP = [
 export const IMOB_NAO_RES_FPR = {
   semDependenciaLTV60: 60,
   comDependenciaLTV60: 70,
-  comDependenciaLTVMaior60: 90,
+  comDependenciaLTVMaior60: 100, // Corrigido: era 90%, deve ser 100% conforme Res. BCB 229
 } as const;
 
 // FPR Especiais (Art. 55-65)
