@@ -16,15 +16,15 @@ interface SectionProps {
 }
 
 export const Section: React.FC<SectionProps> = ({ title, subtitle, children }) => (
-  <section className="mb-2">
+  <section className="mb-3">
     <h2 className="text-xl font-semibold mb-0.5">{title}</h2>
-    {subtitle && <p className="text-sm text-neutral-500 mb-1">{subtitle}</p>}
-    <div className="grid gap-1">{children}</div>
+    {subtitle && <p className="text-sm text-neutral-500 mb-1.5">{subtitle}</p>}
+    <div className="grid gap-2">{children}</div>
   </section>
 );
 
 export const Row: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="grid md:grid-cols-3 gap-1">{children}</div>
+  <div className="grid md:grid-cols-3 gap-2">{children}</div>
 );
 
 interface CardProps {
@@ -35,9 +35,9 @@ interface CardProps {
 }
 
 export const Card: React.FC<CardProps> = ({ title, subtitle, children, className = "" }) => (
-  <div className={`rounded-2xl border p-0.5 shadow-sm bg-white/5 ${className}`}>
-    {title && <h3 className="font-medium">{title}</h3>}
-    {subtitle && <p className="text-sm text-neutral-500">{subtitle}</p>}
+  <div className={`rounded-2xl border p-2 shadow-sm bg-white/5 ${className}`}>
+    {title && <h3 className="font-medium text-sm">{title}</h3>}
+    {subtitle && <p className="text-xs text-neutral-500">{subtitle}</p>}
     {children}
   </div>
 );
@@ -48,7 +48,7 @@ interface LabelProps {
 }
 
 export const Label: React.FC<LabelProps> = ({ children, tooltip }) => (
-  <label className="text-sm font-medium block flex items-center">
+  <label className="text-xs font-medium block flex items-center">
     <span>{children}</span>
     {tooltip && <Tooltip config={tooltip} />}
   </label>
@@ -65,7 +65,7 @@ export const Select: React.FC<SelectProps> = ({ value, onChange, children, class
   <select
     value={value}
     onChange={(e) => onChange(e.target.value)}
-    className={`w-full rounded-xl border px-3 py-1 bg-transparent ${className}`}
+    className={`w-full rounded-xl border px-2 py-0.5 h-7 text-xs bg-transparent ${className}`}
   >
     {children}
   </select>
@@ -91,7 +91,7 @@ export const Input: React.FC<InputProps> = ({
     value={value}
     onChange={(e) => onChange(e.target.value)}
     placeholder={placeholder}
-    className={`w-full rounded-xl border px-3 py-1 bg-transparent ${className}`}
+    className={`w-full rounded-xl border px-2 py-0.5 h-7 text-xs bg-transparent ${className}`}
   />
 );
 
@@ -138,7 +138,7 @@ export const Button: React.FC<ButtonProps> = ({
   variant = "secondary",
   className = "",
 }) => {
-  const baseClasses = "rounded-xl px-4 py-2 transition-colors";
+  const baseClasses = "rounded-xl px-3 py-1 text-xs transition-colors";
   const variantClasses = {
     primary: "bg-emerald-500 text-white hover:bg-emerald-600",
     secondary: "border hover:bg-white/5",
