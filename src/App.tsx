@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FPRInputs } from "./types";
 import { useFPRCalculator, useInitialInputs } from "./hooks/useFPRCalculator";
 import { applyScenario, getScenarioNames } from "./constants/scenarios";
 import { formatPercent, formatCurrency } from "./utils/formatters";
 import {
-  Section,
   Row,
   Card,
-  Label,
   Select,
   Input,
   Switch,
@@ -37,12 +35,12 @@ export default function App() {
 
   const updateNested = <K extends keyof FPRInputs>(
     parent: K,
-    field: keyof FPRInputs[K],
+    field: keyof NonNullable<FPRInputs[K]>,
     value: any
   ) => {
     setInputs((prev) => ({
       ...prev,
-      [parent]: { ...prev[parent], [field]: value },
+      [parent]: { ...(prev[parent] as object), [field]: value },
     }));
   };
 

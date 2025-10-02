@@ -3,7 +3,7 @@
  * Centraliza todos os fatores de ponderação de risco
  */
 
-import { RatingBucket, IFCategoria } from "../types";
+import { RatingBucket } from "../types";
 
 // FPR Soberanos por rating (Art. 30)
 export const SOBERANO_FPR: Record<RatingBucket, number> = {

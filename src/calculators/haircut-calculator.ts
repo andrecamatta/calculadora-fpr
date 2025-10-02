@@ -3,7 +3,7 @@
  * Responsável pelo cálculo de ajustes em colaterais financeiros (Circular BCB 3.809)
  */
 
-import { FPRInputs, ColateralInfo, HaircutResult, Moeda } from "../types";
+import { ColateralInfo, HaircutResult, Moeda } from "../types";
 import {
   HAIRCUT_COLATERAL,
   HAIRCUT_EXPOSICAO,

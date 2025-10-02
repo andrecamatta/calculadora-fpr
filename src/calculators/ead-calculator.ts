@@ -4,7 +4,7 @@
  */
 
 import { FPRInputs, EADInfo } from "../types";
-import { CCF_FACTORS, CCF_DETALHADO, CCF_VAREJO } from "../constants/ccf-factors";
+import { CCF_FACTORS, CCF_VAREJO } from "../constants/ccf-factors";
 import { toNumber } from "../utils/formatters";
 
 export interface EADResult {

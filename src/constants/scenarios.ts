@@ -7,7 +7,7 @@ import { FPRInputs } from "../types";
 export type ScenarioLoader = (baseInputs: FPRInputs) => Partial<FPRInputs>;
 
 export const SCENARIOS: Record<string, ScenarioLoader> = {
-  "PF transactor (cartão)": (base) => ({
+  "PF transactor (cartão)": (_) => ({
     produto: "cartao",
     contraparte: "pf",
     varejo: { elegivel: true, transactor: true, linhaSemSaques360: false },
@@ -16,7 +16,7 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     hedge90: false,
   }),
 
-  "Corporate grande baixo risco": (base) => ({
+  "Corporate grande baixo risco": (_) => ({
     produto: "emprestimo",
     contraparte: "corporate",
     corporate: { grandeBaixoRisco: true, pme: false, financiamento: "nenhum" },
@@ -24,13 +24,13 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     moedaRenda: "BRL",
   }),
 
-  "PME elegível": (base) => ({
+  "PME elegível": (_) => ({
     produto: "emprestimo",
     contraparte: "corporate",
     corporate: { grandeBaixoRisco: false, pme: true, financiamento: "nenhum" },
   }),
 
-  "Imob residencial LTV 55% (sem dependência)": (base) => ({
+  "Imob residencial LTV 55% (sem dependência)": (_) => ({
     produto: "credito_imobiliario",
     contraparte: "pf",
     imobiliario: {
@@ -46,7 +46,7 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     hedge90: false, // aciona ajuste cambial
   }),
 
-  "Imob residencial LTV 25% (com descasamento cambial)": (base) => ({
+  "Imob residencial LTV 25% (com descasamento cambial)": (_) => ({
     produto: "credito_imobiliario",
     contraparte: "pf",
     imobiliario: {
@@ -61,7 +61,7 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     hedge90: false,
   }),
 
-  "IF cat A ≤90d (Tier1/LR ok)": (base) => ({
+  "IF cat A ≤90d (Tier1/LR ok)": (_) => ({
     produto: "emprestimo",
     contraparte: "if",
     ifinfo: {
@@ -74,7 +74,7 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     },
   }),
 
-  "IF cat B >90d comércio exterior": (base) => ({
+  "IF cat B >90d comércio exterior": (_) => ({
     produto: "emprestimo",
     contraparte: "if",
     ifinfo: {
@@ -87,18 +87,18 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     },
   }),
 
-  "Derivativo contra corporate": (base) => ({
+  "Derivativo contra corporate": (_) => ({
     produto: "derivativo",
     contraparte: "corporate",
     corporate: { grandeBaixoRisco: false, pme: false, financiamento: "nenhum" },
   }),
 
-  "BNDES (FPR 0%)": (base) => ({
+  "BNDES (FPR 0%)": (_) => ({
     produto: "emprestimo",
     contraparte: "bndes",
   }),
 
-  "Soberano BR": (base) => ({
+  "Soberano BR": (_) => ({
     produto: "emprestimo",
     contraparte: "soberano_br",
     moedaExposicao: "BRL",
@@ -122,13 +122,13 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     },
   }),
 
-  "Project Finance": (base) => ({
+  "Project Finance": (_) => ({
     produto: "emprestimo",
     contraparte: "corporate",
     corporate: { grandeBaixoRisco: false, pme: false, financiamento: "project" },
   }),
 
-  "Varejo com EAD e CCF": (base) => ({
+  "Varejo com EAD e CCF": (_) => ({
     produto: "cartao",
     contraparte: "pf",
     varejo: { elegivel: true, transactor: false, linhaSemSaques360: false },
@@ -139,7 +139,7 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     },
   }),
 
-  "Corporate com garantia (CRM)": (base) => ({
+  "Corporate com garantia (CRM)": (_) => ({
     produto: "emprestimo",
     contraparte: "corporate",
     corporate: { grandeBaixoRisco: false, pme: false, financiamento: "nenhum" },
@@ -153,64 +153,64 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
   }),
 
   // Novos cenários - Outras Exposições
-  "Caixa (FPR 0%)": (base) => ({
+  "Caixa (FPR 0%)": (_) => ({
     produto: "outro",
     contraparte: "corporate",
     outrasExposicoes: { tipo: "caixa" },
   }),
 
-  "Ouro (FPR 0%)": (base) => ({
+  "Ouro (FPR 0%)": (_) => ({
     produto: "outro",
     contraparte: "corporate",
     outrasExposicoes: { tipo: "ouro" },
   }),
 
-  "Ações listadas (FPR 250%)": (base) => ({
+  "Ações listadas (FPR 250%)": (_) => ({
     produto: "outro",
     contraparte: "corporate",
     outrasExposicoes: { tipo: "acoes_listadas" },
   }),
 
-  "Ações não listadas (FPR 400%)": (base) => ({
+  "Ações não listadas (FPR 400%)": (_) => ({
     produto: "outro",
     contraparte: "corporate",
     outrasExposicoes: { tipo: "acoes_nao_listadas" },
   }),
 
   // Inadimplência
-  "Inadimplência provisão 15% (FPR 150%)": (base) => ({
+  "Inadimplência provisão 15% (FPR 150%)": (_) => ({
     produto: "emprestimo",
     contraparte: "corporate",
     inadimplencia: { emInadimplencia: true, provisaoPercentual: 15 },
   }),
 
-  "Inadimplência provisão 30% (FPR 100%)": (base) => ({
+  "Inadimplência provisão 30% (FPR 100%)": (_) => ({
     produto: "emprestimo",
     contraparte: "corporate",
     inadimplencia: { emInadimplencia: true, provisaoPercentual: 30 },
   }),
 
-  "Inadimplência provisão 60% (FPR 50%)": (base) => ({
+  "Inadimplência provisão 60% (FPR 50%)": (_) => ({
     produto: "emprestimo",
     contraparte: "corporate",
     inadimplencia: { emInadimplencia: true, provisaoPercentual: 60 },
   }),
 
   // Setor Público
-  "Estado sem rating (FPR 100%)": (base) => ({
+  "Estado sem rating (FPR 100%)": (_) => ({
     produto: "emprestimo",
     contraparte: "setor_publico",
     setorPublico: { tipo: "estado", rating: undefined },
   }),
 
-  "Município com rating A+ (FPR 20%)": (base) => ({
+  "Município com rating A+ (FPR 20%)": (_) => ({
     produto: "emprestimo",
     contraparte: "setor_publico",
     setorPublico: { tipo: "municipio", rating: "A+_A-" },
   }),
 
   // Imobiliário - Obra em Andamento
-  "Imob obra andamento - contrato 2023 (FPR 50%)": (base) => ({
+  "Imob obra andamento - contrato 2023 (FPR 50%)": (_) => ({
     produto: "credito_imobiliario",
     contraparte: "pf",
     imobiliario: {
@@ -224,7 +224,7 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     },
   }),
 
-  "Imob obra andamento - contrato 2024+ (FPR 150%)": (base) => ({
+  "Imob obra andamento - contrato 2024+ (FPR 150%)": (_) => ({
     produto: "credito_imobiliario",
     contraparte: "pf",
     imobiliario: {
@@ -239,7 +239,7 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
   }),
 
   // Corporate - Validações
-  "PME com receita R$ 250MM (FPR 85%)": (base) => ({
+  "PME com receita R$ 250MM (FPR 85%)": (_) => ({
     produto: "emprestimo",
     contraparte: "corporate",
     corporate: {
@@ -250,7 +250,7 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     },
   }),
 
-  "PME com receita R$ 400MM - inelegível (FPR 100%)": (base) => ({
+  "PME com receita R$ 400MM - inelegível (FPR 100%)": (_) => ({
     produto: "emprestimo",
     contraparte: "corporate",
     corporate: {
@@ -262,7 +262,7 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
   }),
 
   // Consignado
-  "Consignado 7 anos (FPR 150%)": (base) => ({
+  "Consignado 7 anos (FPR 150%)": (_) => ({
     produto: "emprestimo",
     contraparte: "pf",
     varejo: {
@@ -274,7 +274,7 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
   }),
 
   // Fundos por Mandato
-  "Fundo Equity (mandato - FPR 400%)": (base) => ({
+  "Fundo Equity (mandato - FPR 400%)": (_) => ({
     produto: "fundo",
     contraparte: "corporate",
     fundos: {
@@ -284,7 +284,7 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     },
   }),
 
-  "Fundo Renda Fixa (mandato - FPR 100%)": (base) => ({
+  "Fundo Renda Fixa (mandato - FPR 100%)": (_) => ({
     produto: "fundo",
     contraparte: "corporate",
     fundos: {

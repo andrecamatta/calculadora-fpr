@@ -233,7 +233,7 @@ function calcularIF(inputs: FPRInputs, steps: string[]): FPRBaseResult | null {
 
   const { categoria, prazo90, tier1High, lrHigh, comercioExteriorAte1Ano } = ifinfo;
 
-  let fpr = IF_FPR.C.default;
+  let fpr: number = IF_FPR.C.default;
 
   if (categoria === "A") {
     fpr = prazo90 ? IF_FPR.A.prazo90 : IF_FPR.A.prazoMaior90;

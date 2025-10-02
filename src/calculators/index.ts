@@ -8,7 +8,6 @@ import { computeFPRBase } from "./fpr-base";
 import { calculateEAD } from "./ead-calculator";
 import {
   calculateMitigatedExposureMultiple,
-  calculateMitigationFactor,
   getHaircutDescription,
 } from "./haircut-calculator";
 import { applyAllAdjustments } from "./adjustments";
