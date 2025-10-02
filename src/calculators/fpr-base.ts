@@ -471,34 +471,12 @@ function calcularCorporate(
 
   // Grande baixo risco: receita ≥ R$ 15bi + rating ≥ BB-
   if (corporate.grandeBaixoRisco) {
-    const receita = corporate.receitaAnual;
-    const rating = corporate.rating;
-
-    // Validação (apenas aviso, não bloqueia)
-    if (receita && receita < 15_000_000_000) {
-      steps.push(
-        `⚠️ Corporate grande baixo risco (receita < R$ 15bi: ${(receita / 1_000_000_000).toFixed(1)}bi) - verificar elegibilidade`
-      );
-    }
-    if (rating && (rating === "inferior_B-")) {
-      steps.push("⚠️ Corporate grande baixo risco com rating < BB- - verificar elegibilidade");
-    }
-
     steps.push("Corporate grande de baixo risco ⇒ FPR 65%");
     return { fpr: CORPORATE_FPR.grandeBaixoRisco, classe: "corp_grande_baixo_risco" };
   }
 
   // PME: receita ≤ R$ 300MM
   if (corporate.pme) {
-    const receita = corporate.receitaAnual;
-
-    if (receita && receita > 300_000_000) {
-      steps.push(
-        `⚠️ PME com receita > R$ 300MM (${(receita / 1_000_000).toFixed(0)}MM) - não elegível para FPR 85%. Usando FPR padrão 100%`
-      );
-      return { fpr: CORPORATE_FPR.default, classe: "corp" };
-    }
-
     steps.push(`PME (receita ≤ R$ 300MM) ⇒ FPR 85%`);
     return { fpr: CORPORATE_FPR.pme, classe: "corp_pme" };
   }

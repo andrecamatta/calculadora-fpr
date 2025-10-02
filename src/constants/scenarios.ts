@@ -368,25 +368,13 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
   }),
 
   // Corporate - Validações
-  "PME com receita R$ 250MM (FPR 85%)": (_) => ({
+  "PME (FPR 85%)": (_) => ({
     produto: "emprestimo",
     contraparte: "corporate",
     corporate: {
       grandeBaixoRisco: false,
       pme: true,
       financiamento: "nenhum",
-      receitaAnual: 250_000_000,
-    },
-  }),
-
-  "PME com receita R$ 400MM - inelegível (FPR 100%)": (_) => ({
-    produto: "emprestimo",
-    contraparte: "corporate",
-    corporate: {
-      grandeBaixoRisco: false,
-      pme: true,
-      financiamento: "nenhum",
-      receitaAnual: 400_000_000,
     },
   }),
 
