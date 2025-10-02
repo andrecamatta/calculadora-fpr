@@ -59,8 +59,8 @@ export default function App() {
   };
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto text-sm">
-      <header className="mb-6">
+    <div className="p-4 md:p-6 max-w-7xl mx-auto text-sm">
+      <header className="mb-4">
         <h1 className="text-3xl font-bold">
           Calculadora FPR - Res. BCB 229/2022
         </h1>
@@ -70,9 +70,9 @@ export default function App() {
         </p>
       </header>
 
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="grid lg:grid-cols-3 gap-4">
         {/* Coluna 1 e 2: Formulários */}
-        <div className="lg:col-span-2 grid gap-4">
+        <div className="lg:col-span-2 grid gap-2">
           {/* EAD (Exposure at Default) - Primeiro: definir valor da exposição */}
           <Card title="EAD (Exposure at Default)" subtitle="Valor da exposição ao risco de crédito">
             <Row>
@@ -672,9 +672,9 @@ export default function App() {
         </div>
 
         {/* Coluna 3: Resultado */}
-        <div className="grid gap-6 h-fit sticky top-6">
+        <div className="grid gap-3 h-fit sticky top-6">
           <Card title="Resultado">
-            <div className="flex items-baseline gap-3 mb-4">
+            <div className="flex items-baseline gap-3 mb-2">
               <div className="text-4xl font-bold text-emerald-500">
                 {formatPercent(result.fpr)}
               </div>

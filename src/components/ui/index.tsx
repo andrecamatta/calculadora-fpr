@@ -35,9 +35,9 @@ interface CardProps {
 }
 
 export const Card: React.FC<CardProps> = ({ title, subtitle, children, className = "" }) => (
-  <div className={`rounded-2xl border p-1.5 shadow-sm bg-white/5 ${className}`}>
-    {title && <h3 className="font-medium mb-0.5">{title}</h3>}
-    {subtitle && <p className="text-sm text-neutral-500 mb-0.5">{subtitle}</p>}
+  <div className={`rounded-2xl border p-1 shadow-sm bg-white/5 ${className}`}>
+    {title && <h3 className="font-medium">{title}</h3>}
+    {subtitle && <p className="text-sm text-neutral-500">{subtitle}</p>}
     {children}
   </div>
 );
@@ -48,7 +48,7 @@ interface LabelProps {
 }
 
 export const Label: React.FC<LabelProps> = ({ children, tooltip }) => (
-  <label className="text-sm font-medium block mb-0.5 flex items-center">
+  <label className="text-sm font-medium block flex items-center">
     <span>{children}</span>
     {tooltip && <Tooltip config={tooltip} />}
   </label>
@@ -65,7 +65,7 @@ export const Select: React.FC<SelectProps> = ({ value, onChange, children, class
   <select
     value={value}
     onChange={(e) => onChange(e.target.value)}
-    className={`w-full rounded-xl border px-3 py-1.5 bg-transparent ${className}`}
+    className={`w-full rounded-xl border px-3 py-1 bg-transparent ${className}`}
   >
     {children}
   </select>
@@ -91,7 +91,7 @@ export const Input: React.FC<InputProps> = ({
     value={value}
     onChange={(e) => onChange(e.target.value)}
     placeholder={placeholder}
-    className={`w-full rounded-xl border px-3 py-1.5 bg-transparent ${className}`}
+    className={`w-full rounded-xl border px-3 py-1 bg-transparent ${className}`}
   />
 );
 
@@ -122,7 +122,7 @@ export const Switch: React.FC<SwitchProps> = ({ checked, onChange, label }) => (
 );
 
 export const Helper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <p className="text-xs text-neutral-500 leading-relaxed mt-0.5">{children}</p>
+  <p className="text-xs text-neutral-500 leading-relaxed">{children}</p>
 );
 
 interface ButtonProps {
