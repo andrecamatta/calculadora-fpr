@@ -24,7 +24,7 @@ export const Section: React.FC<SectionProps> = ({ title, subtitle, children }) =
 );
 
 export const Row: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="grid md:grid-cols-3 gap-2">{children}</div>
+  <div className="grid md:grid-cols-3 gap-2 items-start">{children}</div>
 );
 
 interface CardProps {
@@ -35,7 +35,7 @@ interface CardProps {
 }
 
 export const Card: React.FC<CardProps> = ({ title, subtitle, children, className = "" }) => (
-  <div className={`rounded-2xl border p-2 shadow-sm bg-white/5 ${className}`}>
+  <div className={`rounded-2xl border p-3 shadow-sm bg-white/5 ${className}`}>
     {title && <h3 className="font-medium text-sm">{title}</h3>}
     {subtitle && <p className="text-xs text-neutral-500">{subtitle}</p>}
     {children}
@@ -65,7 +65,7 @@ export const Select: React.FC<SelectProps> = ({ value, onChange, children, class
   <select
     value={value}
     onChange={(e) => onChange(e.target.value)}
-    className={`w-full rounded-xl border px-2 py-0.5 h-7 text-xs bg-transparent ${className}`}
+    className={`w-full rounded-xl border px-3 py-0.5 h-7 text-xs bg-transparent ${className}`}
   >
     {children}
   </select>
@@ -91,7 +91,7 @@ export const Input: React.FC<InputProps> = ({
     value={value}
     onChange={(e) => onChange(e.target.value)}
     placeholder={placeholder}
-    className={`w-full rounded-xl border px-2 py-0.5 h-7 text-xs bg-transparent ${className}`}
+    className={`w-full rounded-xl border px-3 py-0.5 h-7 text-xs bg-transparent ${className}`}
   />
 );
 
