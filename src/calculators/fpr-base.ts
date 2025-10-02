@@ -1,0 +1,565 @@
+/**
+ * Calculadora de FPR Base - Single Responsibility Principle
+ * Responsável apenas pelo cálculo do FPR base por classe de ativo/contraparte
+ */
+
+import { FPRInputs } from "../types";
+import {
+  SOBERANO_FPR,
+  IF_FPR,
+  CORPORATE_FPR,
+  VAREJO_FPR,
+  IMOB_RES_SEM_DEP,
+  IMOB_RES_COM_DEP,
+  IMOB_NAO_RES_FPR,
+  IMOB_OBRA_ANDAMENTO_FPR,
+  ESPECIAIS_FPR,
+  FPR_DEFAULT,
+  FPR_ZERO_ENTITIES,
+  SETOR_PUBLICO_FPR,
+  OUTRAS_EXPOSICOES_FPR,
+  INADIMPLENCIA_FPR,
+  FUNDOS_MANDATO_FPR,
+  AJUSTES,
+} from "../constants/fpr-rates";
+
+export interface FPRBaseResult {
+  fpr: number;
+  classe: string;
+}
+
+/**
+ * Calcula FPR para exposições em inadimplência / ativos problemáticos
+ * MÁXIMA PRIORIDADE - sobrepõe TODOS os outros casos
+ */
+function calcularInadimplencia(
+  inputs: FPRInputs,
+  steps: string[]
+): FPRBaseResult | null {
+  const { inadimplencia } = inputs;
+
+  if (!inadimplencia.emInadimplencia) return null;
+
+  const provisao = inadimplencia.provisaoPercentual;
+
+  if (provisao >= 50) {
+    steps.push(`Exposição em inadimplência, provisão ≥ 50% (${provisao}%) ⇒ FPR 50%`);
+    return { fpr: INADIMPLENCIA_FPR.provisaoMaior50, classe: "inadimplencia_prov_alta" };
+  }
+
+  if (provisao >= 20) {
+    steps.push(`Exposição em inadimplência, provisão 20-50% (${provisao}%) ⇒ FPR 100%`);
+    return { fpr: INADIMPLENCIA_FPR.provisao20a50, classe: "inadimplencia_prov_media" };
+  }
+
+  steps.push(`Exposição em inadimplência, provisão < 20% (${provisao}%) ⇒ FPR 150%`);
+  return { fpr: INADIMPLENCIA_FPR.provisaoMenor20, classe: "inadimplencia_prov_baixa" };
+}
+
+/**
+ * Calcula FPR para outras exposições (Art. 66)
+ * Caixa, Ouro, Ações, Ativos Fixos, etc
+ */
+function calcularOutrasExposicoes(
+  inputs: FPRInputs,
+  steps: string[]
+): FPRBaseResult | null {
+  const { outrasExposicoes, produto } = inputs;
+
+  // Só aplica se produto for "outro" e tivermos tipo especificado
+  if (produto !== "outro") return null;
+
+  const { tipo } = outrasExposicoes;
+
+  switch (tipo) {
+    case "caixa":
+      steps.push("Caixa/Moeda (Art. 66) ⇒ FPR 0%");
+      return { fpr: OUTRAS_EXPOSICOES_FPR.caixa, classe: "caixa" };
+
+    case "ouro":
+      steps.push("Ouro (Art. 66) ⇒ FPR 0%");
+      return { fpr: OUTRAS_EXPOSICOES_FPR.ouro, classe: "ouro" };
+
+    case "acoes_listadas":
+      steps.push("Ações listadas em bolsa (Art. 66) ⇒ FPR 250%");
+      return { fpr: OUTRAS_EXPOSICOES_FPR.acoesListadas, classe: "acoes_listadas" };
+
+    case "acoes_nao_listadas":
+      steps.push("Ações não listadas (Art. 66) ⇒ FPR 400%");
+      return { fpr: OUTRAS_EXPOSICOES_FPR.acoesNaoListadas, classe: "acoes_nao_listadas" };
+
+    case "ativo_fixo":
+      steps.push("Ativo fixo (Art. 66) ⇒ FPR 100%");
+      return { fpr: OUTRAS_EXPOSICOES_FPR.ativoFixo, classe: "ativo_fixo" };
+
+    case "outros":
+      steps.push("Outros ativos (Art. 66) ⇒ FPR 100%");
+      return { fpr: OUTRAS_EXPOSICOES_FPR.outros, classe: "outros_ativos" };
+
+    default:
+      return null;
+  }
+}
+
+/**
+ * Calcula FPR para casos especiais que sobrepõem outras regras
+ * (Subordinado, Equity, Créditos Tributários, Precatórios)
+ */
+function calcularEspeciais(
+  inputs: FPRInputs,
+  steps: string[]
+): FPRBaseResult | null {
+  const { especiais } = inputs;
+
+  if (especiais.ajusteNegativoPL) {
+    steps.push("Ajuste negativo em PL (Res. 452/2025) ⇒ FPR 100%");
+    return { fpr: ESPECIAIS_FPR.ajusteNegativoPL, classe: "ajuste_negativo_pl" };
+  }
+
+  if (especiais.subordinado) {
+    steps.push("Instrumento subordinado ⇒ FPR 150%");
+    return { fpr: ESPECIAIS_FPR.subordinado, classe: "subordinado" };
+  }
+
+  if (especiais.equity === "250") {
+    steps.push("Participação (equity) significativa não deduzida ⇒ FPR 250%");
+    return { fpr: ESPECIAIS_FPR.equity250, classe: "equity" };
+  }
+
+  if (especiais.equity === "1250") {
+    steps.push("Excedente/alguns casos de equity ⇒ FPR 1.250%");
+    return { fpr: ESPECIAIS_FPR.equity1250, classe: "equity" };
+  }
+
+  if (especiais.creditoTributario !== "nao") {
+    const fprMap = {
+      "100": ESPECIAIS_FPR.creditoTributario100,
+      "600": ESPECIAIS_FPR.creditoTributario600,
+      "1250": ESPECIAIS_FPR.creditoTributario1250,
+    };
+    const fpr = fprMap[especiais.creditoTributario as keyof typeof fprMap];
+    if (fpr) {
+      steps.push(`Crédito tributário ⇒ FPR ${fpr}%`);
+      return { fpr, classe: "credito_tributario" };
+    }
+  }
+
+  if (especiais.precatorioRecebiveis !== "nao") {
+    const fprMap = {
+      "100": ESPECIAIS_FPR.creditoTributario100,
+      "600": ESPECIAIS_FPR.creditoTributario600,
+      "1250": ESPECIAIS_FPR.creditoTributario1250,
+    };
+    const fpr = fprMap[especiais.precatorioRecebiveis as keyof typeof fprMap];
+    if (fpr) {
+      steps.push(`Precatórios/recebíveis ⇒ FPR ${fpr}%`);
+      return { fpr, classe: "precatorios" };
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Calcula FPR para soberanos e multilaterais
+ */
+function calcularSoberano(
+  inputs: FPRInputs,
+  steps: string[]
+): FPRBaseResult | null {
+  const { contraparte, soberano } = inputs;
+
+  if (contraparte === "soberano_br") {
+    steps.push("Soberano BR/BCB em BRL ⇒ FPR 0%");
+    return { fpr: FPR_ZERO_ENTITIES.soberanoBR, classe: "soberano" };
+  }
+
+  if (contraparte === "bndes") {
+    steps.push("BNDES (tratado como soberano) ⇒ FPR 0%");
+    return { fpr: FPR_ZERO_ENTITIES.bndes, classe: "bndes" };
+  }
+
+  if (soberano.multilateralListada) {
+    steps.push("Organização multilateral/MDE listada ⇒ FPR 0%");
+    return { fpr: FPR_ZERO_ENTITIES.multilateralListada, classe: "multilateral" };
+  }
+
+  if (contraparte === "soberano_estrangeiro") {
+    const fpr = SOBERANO_FPR[soberano.ratingBucket];
+    steps.push(
+      `Soberano estrangeiro (bucket ${soberano.ratingBucket}) ⇒ FPR ${fpr}%`
+    );
+    return { fpr, classe: "soberano_estrangeiro" };
+  }
+
+  return null;
+}
+
+/**
+ * Calcula FPR para setor público (estados, municípios, PSP, estatais)
+ */
+function calcularSetorPublico(
+  inputs: FPRInputs,
+  steps: string[]
+): FPRBaseResult | null {
+  const { contraparte, setorPublico } = inputs;
+
+  if (contraparte !== "setor_publico") return null;
+
+  const { tipo, rating } = setorPublico;
+
+  // Se tiver rating, usar tabela de soberanos
+  if (rating) {
+    const fpr = SOBERANO_FPR[rating];
+    steps.push(
+      `Setor Público (${tipo}) com rating ${rating} ⇒ FPR ${fpr}%`
+    );
+    return { fpr, classe: `setor_publico_${tipo}_rated` };
+  }
+
+  // Sem rating, usar FPR padrão
+  const fpr = SETOR_PUBLICO_FPR.default;
+  steps.push(`Setor Público (${tipo}) sem rating ⇒ FPR ${fpr}%`);
+  return { fpr, classe: `setor_publico_${tipo}` };
+}
+
+/**
+ * Calcula FPR para instituições financeiras
+ */
+function calcularIF(inputs: FPRInputs, steps: string[]): FPRBaseResult | null {
+  const { contraparte, ifinfo } = inputs;
+
+  if (contraparte !== "if") return null;
+
+  const { categoria, prazo90, tier1High, lrHigh, comercioExteriorAte1Ano } = ifinfo;
+
+  let fpr = IF_FPR.C.default;
+
+  if (categoria === "A") {
+    fpr = prazo90 ? IF_FPR.A.prazo90 : IF_FPR.A.prazoMaior90;
+
+    if (tier1High && lrHigh) {
+      fpr = IF_FPR.A.tier1LRAlto;
+    }
+
+    if (comercioExteriorAte1Ano) {
+      fpr = IF_FPR.A.comercioExterior;
+    }
+
+    steps.push(
+      `IF categoria A ⇒ ${prazo90 ? "≤90d" : ">90d"}: ${fpr}%` +
+        (tier1High && lrHigh ? " (Tier1≥14%, LR≥5%)" : "") +
+        (comercioExteriorAte1Ano ? " (comércio ext. ≤1 ano)" : "")
+    );
+  } else if (categoria === "B") {
+    fpr = prazo90 ? IF_FPR.B.prazo90 : IF_FPR.B.prazoMaior90;
+
+    if (comercioExteriorAte1Ano) {
+      fpr = IF_FPR.B.comercioExterior;
+    }
+
+    steps.push(
+      `IF categoria B ⇒ ${prazo90 ? "≤90d" : ">90d"}: ${fpr}%` +
+        (comercioExteriorAte1Ano ? " (comércio ext. ≤1 ano)" : "")
+    );
+  } else {
+    steps.push("IF categoria C ⇒ FPR 150%");
+  }
+
+  return { fpr, classe: "if" };
+}
+
+/**
+ * Calcula FPR para crédito imobiliário
+ */
+function calcularImobiliario(
+  inputs: FPRInputs,
+  steps: string[]
+): FPRBaseResult | null {
+  const { produto, imobiliario } = inputs;
+
+  const isImob = produto === "credito_imobiliario" || imobiliario.garantiaElegivel;
+  if (!isImob) return null;
+
+  const { tipo, dependenciaFluxo, ltv, garantiaElegivel, imovelConcluido } = imobiliario;
+
+  // Obra em andamento - tratamento especial
+  if (!imovelConcluido) {
+    if (imobiliario.contratoAte2023) {
+      steps.push(
+        "Imobiliário - obra em andamento (contrato até 2023) ⇒ FPR 50%"
+      );
+      return { fpr: IMOB_OBRA_ANDAMENTO_FPR.contratoAte2023, classe: "imob_obra_2023" };
+    }
+
+    if (imobiliario.contratoApos2024) {
+      steps.push(
+        "Imobiliário - obra em andamento (contrato após 2024) ⇒ FPR 150% (ou FPR devedor conforme características)"
+      );
+      return { fpr: IMOB_OBRA_ANDAMENTO_FPR.contratoApos2024, classe: "imob_obra_2024" };
+    }
+
+    // Sem informação de data de contrato
+    steps.push(
+      "Imobiliário - obra não concluída (sem data contrato) ⇒ usar FPR do devedor"
+    );
+    return null;
+  }
+
+  if (!garantiaElegivel) {
+    steps.push(
+      "Imobiliário sem garantia elegível ⇒ usar FPR do devedor"
+    );
+    return null;
+  }
+
+  if (tipo === "residencial") {
+    const table = dependenciaFluxo ? IMOB_RES_COM_DEP : IMOB_RES_SEM_DEP;
+    const fpr = table.find((row) => ltv <= row.maxLTV)?.fpr ?? 105;
+
+    steps.push(
+      `Imobiliário residencial ${dependenciaFluxo ? "(com dependência)" : "(sem dependência)"}, LTV ${ltv}% ⇒ FPR ${fpr}%`
+    );
+
+    return {
+      fpr,
+      classe: dependenciaFluxo ? "imob_res_dep" : "imob_res",
+    };
+  } else {
+    // Não residencial
+    if (!dependenciaFluxo) {
+      if (ltv <= 60) {
+        steps.push(
+          "Imobiliário não residencial (sem dependência), LTV ≤ 60% ⇒ FPR 60% (ou FPR do devedor, o menor)"
+        );
+        return { fpr: IMOB_NAO_RES_FPR.semDependenciaLTV60, classe: "imob_nr_sem_dep" };
+      }
+      steps.push(
+        "Imobiliário não residencial (sem dependência), LTV > 60% ⇒ FPR do devedor"
+      );
+      return null;
+    } else {
+      const fpr =
+        ltv <= 60
+          ? IMOB_NAO_RES_FPR.comDependenciaLTV60
+          : IMOB_NAO_RES_FPR.comDependenciaLTVMaior60;
+
+      steps.push(
+        `Imobiliário não residencial (com dependência), LTV ${ltv}% ⇒ FPR ${fpr}%`
+      );
+      return { fpr, classe: "imob_nr_dep" };
+    }
+  }
+}
+
+/**
+ * Calcula FPR para varejo / pessoa física
+ */
+function calcularVarejo(
+  inputs: FPRInputs,
+  steps: string[]
+): FPRBaseResult | null {
+  const { contraparte, varejo } = inputs;
+
+  if (contraparte !== "pf") return null;
+
+  // Consignado com prazo > 5 anos (caso especial)
+  if (varejo.consignadoPrazoAnos && varejo.consignadoPrazoAnos > 5) {
+    steps.push(
+      `Consignado prazo > 5 anos (${varejo.consignadoPrazoAnos} anos) ⇒ FPR 150% (antes 300%)`
+    );
+    return { fpr: AJUSTES.consignadoMais5Anos, classe: "consignado_longo_prazo" };
+  }
+
+  if (varejo.elegivel) {
+    if (varejo.transactor || varejo.linhaSemSaques360) {
+      steps.push(
+        "Varejo PF 'transactor'/linha sem saques em 360d ⇒ FPR 45%"
+      );
+      return { fpr: VAREJO_FPR.transactor, classe: "varejo_transactor" };
+    }
+
+    steps.push("Varejo PF elegível (≤R$ 5MM por cliente) ⇒ FPR 75%");
+    return { fpr: VAREJO_FPR.elegivel, classe: "varejo" };
+  }
+
+  steps.push("PF fora de varejo elegível ⇒ FPR 100%");
+  return { fpr: VAREJO_FPR.naoElegivel, classe: "pf_nao_varejo" };
+}
+
+/**
+ * Calcula FPR para corporates (empresas não financeiras)
+ */
+function calcularCorporate(
+  inputs: FPRInputs,
+  steps: string[]
+): FPRBaseResult | null {
+  const { contraparte, corporate } = inputs;
+
+  if (contraparte !== "corporate") return null;
+
+  // Grande baixo risco: receita ≥ R$ 15bi + rating ≥ BB-
+  if (corporate.grandeBaixoRisco) {
+    const receita = corporate.receitaAnual;
+    const rating = corporate.rating;
+
+    // Validação (apenas aviso, não bloqueia)
+    if (receita && receita < 15_000_000_000) {
+      steps.push(
+        `⚠️ Corporate grande baixo risco (receita < R$ 15bi: ${(receita / 1_000_000_000).toFixed(1)}bi) - verificar elegibilidade`
+      );
+    }
+    if (rating && (rating === "inferior_B-")) {
+      steps.push("⚠️ Corporate grande baixo risco com rating < BB- - verificar elegibilidade");
+    }
+
+    steps.push("Corporate grande de baixo risco ⇒ FPR 65%");
+    return { fpr: CORPORATE_FPR.grandeBaixoRisco, classe: "corp_grande_baixo_risco" };
+  }
+
+  // PME: receita ≤ R$ 300MM
+  if (corporate.pme) {
+    const receita = corporate.receitaAnual;
+
+    if (receita && receita > 300_000_000) {
+      steps.push(
+        `⚠️ PME com receita > R$ 300MM (${(receita / 1_000_000).toFixed(0)}MM) - não elegível para FPR 85%. Usando FPR padrão 100%`
+      );
+      return { fpr: CORPORATE_FPR.default, classe: "corp" };
+    }
+
+    steps.push(`PME (receita ≤ R$ 300MM) ⇒ FPR 85%`);
+    return { fpr: CORPORATE_FPR.pme, classe: "corp_pme" };
+  }
+
+  if (
+    corporate.financiamento === "objeto" ||
+    corporate.financiamento === "commodities"
+  ) {
+    steps.push("Financiamento especializado (objeto/commodities) ⇒ FPR 100%");
+    return { fpr: CORPORATE_FPR.financiamentoObjeto, classe: "corp_fin_esp" };
+  }
+
+  if (corporate.financiamento === "project") {
+    steps.push("Project finance ⇒ FPR 130%");
+    return { fpr: CORPORATE_FPR.projectFinance, classe: "corp_project" };
+  }
+
+  steps.push("Demais empresas não financeiras ⇒ FPR 100%");
+  return { fpr: CORPORATE_FPR.default, classe: "corp" };
+}
+
+/**
+ * Calcula FPR para fundos
+ */
+function calcularFundos(
+  inputs: FPRInputs,
+  steps: string[]
+): FPRBaseResult | null {
+  const { produto, fundos } = inputs;
+
+  if (produto !== "fundo") return null;
+
+  // Look-through (preferencial)
+  if (fundos.abordagem === "look-through" && typeof fundos.fprLookThrough === "number") {
+    steps.push(`Fundo (look-through) ⇒ FPR médio informado: ${fundos.fprLookThrough}%`);
+    return { fpr: fundos.fprLookThrough, classe: "fundo_lt" };
+  }
+
+  // Mandato (baseado no tipo do fundo)
+  if (fundos.abordagem === "mandato" && fundos.tipo) {
+    const fprMap = {
+      equity: FUNDOS_MANDATO_FPR.equity,
+      fixedIncome: FUNDOS_MANDATO_FPR.fixedIncome,
+      mixed: FUNDOS_MANDATO_FPR.mixed,
+      outros: FUNDOS_MANDATO_FPR.outros,
+    };
+
+    const fpr = fprMap[fundos.tipo];
+    steps.push(`Fundo (mandato ${fundos.tipo}) ⇒ FPR ${fpr}%`);
+    return { fpr, classe: `fundo_${fundos.tipo}` };
+  }
+
+  // Regulamento ou sem informação
+  steps.push("Fundo sem look-through/mandato ⇒ FPR conservador 100%");
+  return { fpr: FPR_DEFAULT, classe: "fundo" };
+}
+
+/**
+ * Calcula FPR para derivativos (usa FPR da contraparte)
+ */
+function calcularDerivativo(
+  inputs: FPRInputs,
+  steps: string[]
+): FPRBaseResult | null {
+  const { produto } = inputs;
+
+  if (produto !== "derivativo") return null;
+
+  steps.push("Derivativo (CCR) ⇒ usar FPR da contraparte");
+
+  // Recalcula FPR como se fosse exposição direta
+  const simulatedInputs = { ...inputs, produto: "outro" as const };
+  const result = computeFPRBase(simulatedInputs, steps);
+
+  return { ...result, classe: "derivativo_ccr" };
+}
+
+/**
+ * Calcula FPR base por classe de ativo/contraparte
+ * Aplica cascata de regras seguindo hierarquia da Res. BCB 229
+ */
+export function computeFPRBase(
+  inputs: FPRInputs,
+  steps: string[]
+): FPRBaseResult {
+  // Hierarquia de cálculo (ordem importa!)
+
+  // 0. Inadimplência (MÁXIMA PRIORIDADE - sobrepõe TUDO)
+  const inadimplencia = calcularInadimplencia(inputs, steps);
+  if (inadimplencia) return inadimplencia;
+
+  // 1. Outras Exposições (Art. 66 - caixa, ouro, ações, etc)
+  const outrasExposicoes = calcularOutrasExposicoes(inputs, steps);
+  if (outrasExposicoes) return outrasExposicoes;
+
+  // 2. Especiais (subordinado, equity, crédito tributário, etc)
+  const especiais = calcularEspeciais(inputs, steps);
+  if (especiais) return especiais;
+
+  // 3. Soberanos e multilaterais
+  const soberano = calcularSoberano(inputs, steps);
+  if (soberano) return soberano;
+
+  // 4. Setor Público
+  const setorPublico = calcularSetorPublico(inputs, steps);
+  if (setorPublico) return setorPublico;
+
+  // 5. Instituições Financeiras
+  const ifResult = calcularIF(inputs, steps);
+  if (ifResult) return ifResult;
+
+  // 6. Imobiliário (se elegível)
+  const imobiliario = calcularImobiliario(inputs, steps);
+  if (imobiliario) return imobiliario;
+
+  // 7. Varejo / PF (inclui consignado)
+  const varejo = calcularVarejo(inputs, steps);
+  if (varejo) return varejo;
+
+  // 8. Corporate (inclui validações PME/grande)
+  const corporate = calcularCorporate(inputs, steps);
+  if (corporate) return corporate;
+
+  // 9. Fundos (inclui mandato)
+  const fundos = calcularFundos(inputs, steps);
+  if (fundos) return fundos;
+
+  // 10. Derivativos
+  const derivativo = calcularDerivativo(inputs, steps);
+  if (derivativo) return derivativo;
+
+  // Default conservador
+  steps.push("Classe não mapeada ⇒ FPR conservador 100%");
+  return { fpr: FPR_DEFAULT, classe: "outros" };
+}
