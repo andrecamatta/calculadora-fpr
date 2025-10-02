@@ -72,7 +72,7 @@ export default function App() {
 
       <div className="grid lg:grid-cols-3 gap-4">
         {/* Coluna 1 e 2: Formulários */}
-        <div className="lg:col-span-2 grid gap-2">
+        <div className="lg:col-span-2 grid gap-1.5">
           {/* EAD (Exposure at Default) - Primeiro: definir valor da exposição */}
           <Card title="EAD (Exposure at Default)" subtitle="Valor da exposição ao risco de crédito">
             <Row>
@@ -553,37 +553,6 @@ export default function App() {
             </Card>
           )}
 
-          {/* Inadimplência / Ativos Problemáticos - Status excepcional */}
-          <Card title="Inadimplência / Ativos Problemáticos">
-            <Row>
-              <FieldGroup label="Em inadimplência?" tooltip={TOOLTIPS.inadimplencia}>
-                <Switch
-                  checked={inputs.inadimplencia.emInadimplencia}
-                  onChange={(v) =>
-                    updateNested("inadimplencia", "emInadimplencia", v)
-                  }
-                />
-                <Helper>PRIORIDADE MÁXIMA - sobrepõe todos os outros cálculos</Helper>
-              </FieldGroup>
-
-              {inputs.inadimplencia.emInadimplencia && (
-                <FieldGroup label="Provisão (%)" tooltip={TOOLTIPS.provisao}>
-                  <Input
-                    type="number"
-                    value={inputs.inadimplencia.provisaoPercentual}
-                    onChange={(v) =>
-                      updateNested("inadimplencia", "provisaoPercentual", Number(v))
-                    }
-                    placeholder="0-100"
-                  />
-                  <Helper>
-                    &lt;20%: FPR 150% | 20-50%: FPR 100% | ≥50%: FPR 50%
-                  </Helper>
-                </FieldGroup>
-              )}
-            </Row>
-          </Card>
-
           {/* CRM e Especiais */}
           <Card title="CRM e Especiais">
             <Row>
@@ -669,10 +638,41 @@ export default function App() {
               </FieldGroup>
             </Row>
           </Card>
+
+          {/* Inadimplência / Ativos Problemáticos - Status excepcional */}
+          <Card title="Inadimplência / Ativos Problemáticos">
+            <Row>
+              <FieldGroup label="Em inadimplência?" tooltip={TOOLTIPS.inadimplencia}>
+                <Switch
+                  checked={inputs.inadimplencia.emInadimplencia}
+                  onChange={(v) =>
+                    updateNested("inadimplencia", "emInadimplencia", v)
+                  }
+                />
+                <Helper>PRIORIDADE MÁXIMA - sobrepõe todos os outros cálculos</Helper>
+              </FieldGroup>
+
+              {inputs.inadimplencia.emInadimplencia && (
+                <FieldGroup label="Provisão (%)" tooltip={TOOLTIPS.provisao}>
+                  <Input
+                    type="number"
+                    value={inputs.inadimplencia.provisaoPercentual}
+                    onChange={(v) =>
+                      updateNested("inadimplencia", "provisaoPercentual", Number(v))
+                    }
+                    placeholder="0-100"
+                  />
+                  <Helper>
+                    &lt;20%: FPR 150% | 20-50%: FPR 100% | ≥50%: FPR 50%
+                  </Helper>
+                </FieldGroup>
+              )}
+            </Row>
+          </Card>
         </div>
 
         {/* Coluna 3: Resultado */}
-        <div className="grid gap-3 h-fit sticky top-6">
+        <div className="grid gap-2 h-fit sticky top-6">
           <Card title="Resultado">
             <div className="flex items-baseline gap-3 mb-2">
               <div className="text-4xl font-bold text-emerald-500">
