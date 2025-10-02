@@ -19,12 +19,12 @@ export const Section: React.FC<SectionProps> = ({ title, subtitle, children }) =
   <section className="mb-3">
     <h2 className="text-xl font-semibold mb-0.5">{title}</h2>
     {subtitle && <p className="text-sm text-neutral-500 mb-1.5">{subtitle}</p>}
-    <div className="grid gap-2">{children}</div>
+    <div className="grid gap-3">{children}</div>
   </section>
 );
 
 export const Row: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="grid md:grid-cols-3 gap-2 items-start">{children}</div>
+  <div className="grid md:grid-cols-3 gap-3 items-start">{children}</div>
 );
 
 interface CardProps {
@@ -35,7 +35,7 @@ interface CardProps {
 }
 
 export const Card: React.FC<CardProps> = ({ title, subtitle, children, className = "" }) => (
-  <div className={`rounded-2xl border p-3 shadow-sm bg-white/5 ${className}`}>
+  <div className={`rounded-2xl border p-4 shadow-sm bg-white/5 ${className}`}>
     {title && <h3 className="font-medium text-sm">{title}</h3>}
     {subtitle && <p className="text-xs text-neutral-500">{subtitle}</p>}
     {children}
@@ -48,7 +48,7 @@ interface LabelProps {
 }
 
 export const Label: React.FC<LabelProps> = ({ children, tooltip }) => (
-  <label className="text-xs font-medium block flex items-center">
+  <label className="text-xs font-medium block flex items-center mb-1">
     <span>{children}</span>
     {tooltip && <Tooltip config={tooltip} />}
   </label>
@@ -163,7 +163,7 @@ interface FieldGroupProps {
 }
 
 export const FieldGroup: React.FC<FieldGroupProps> = ({ label, helper, children, tooltip }) => (
-  <div>
+  <div className="space-y-1">
     <Label tooltip={tooltip}>{label}</Label>
     {children}
     {helper && <Helper>{helper}</Helper>}
