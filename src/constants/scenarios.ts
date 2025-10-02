@@ -166,6 +166,56 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     // Deveria?: 50% (prazo melhor) ou 75%?
   }),
 
+  // ===== CORPORATE - Testes de Precedência =====
+
+  "🔍 Corporate: PME + Project Finance": (_) => ({
+    produto: "emprestimo",
+    contraparte: "corporate",
+    corporate: {
+      grandeBaixoRisco: false,
+      pme: true,                // 85%
+      financiamento: "project", // 130%
+    },
+    // Antes: 85% (PME tinha precedência)
+    // Agora: 130% ✅ (financiamento especializado tem prioridade)
+  }),
+
+  "🔍 Corporate: Grande BR + Project Finance": (_) => ({
+    produto: "emprestimo",
+    contraparte: "corporate",
+    corporate: {
+      grandeBaixoRisco: true,   // 65%
+      pme: false,
+      financiamento: "project", // 130%
+    },
+    // Antes: 65% (Grande BR tinha precedência)
+    // Agora: 130% ✅ (financiamento especializado tem prioridade)
+  }),
+
+  "🔍 Corporate: PME + Fin. Objeto": (_) => ({
+    produto: "emprestimo",
+    contraparte: "corporate",
+    corporate: {
+      grandeBaixoRisco: false,
+      pme: true,                // 85%
+      financiamento: "objeto",  // 100%
+    },
+    // Antes: 85% (PME tinha precedência)
+    // Agora: 100% ✅ (financiamento especializado tem prioridade)
+  }),
+
+  "🔍 Corporate: Grande BR + Fin. Objeto": (_) => ({
+    produto: "emprestimo",
+    contraparte: "corporate",
+    corporate: {
+      grandeBaixoRisco: true,   // 65%
+      pme: false,
+      financiamento: "objeto",  // 100%
+    },
+    // Antes: 65% (Grande BR tinha precedência)
+    // Agora: 100% ✅ (financiamento especializado tem prioridade)
+  }),
+
   "Derivativo contra corporate": (_) => ({
     produto: "derivativo",
     contraparte: "corporate",

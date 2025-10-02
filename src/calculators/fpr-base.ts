@@ -451,6 +451,24 @@ function calcularCorporate(
 
   if (contraparte !== "corporate") return null;
 
+  // 1º) Financiamentos Especializados TÊM PRIORIDADE
+  //     (estrutura da operação define o risco)
+  if (corporate.financiamento === "project") {
+    steps.push("Project finance ⇒ FPR 130%");
+    return { fpr: CORPORATE_FPR.projectFinance, classe: "corp_project" };
+  }
+
+  if (
+    corporate.financiamento === "objeto" ||
+    corporate.financiamento === "commodities"
+  ) {
+    steps.push("Financiamento especializado (objeto/commodities) ⇒ FPR 100%");
+    return { fpr: CORPORATE_FPR.financiamentoObjeto, classe: "corp_fin_esp" };
+  }
+
+  // 2º) Se NÃO for financiamento especializado,
+  //     avaliar características da CONTRAPARTE
+
   // Grande baixo risco: receita ≥ R$ 15bi + rating ≥ BB-
   if (corporate.grandeBaixoRisco) {
     const receita = corporate.receitaAnual;
@@ -483,19 +501,6 @@ function calcularCorporate(
 
     steps.push(`PME (receita ≤ R$ 300MM) ⇒ FPR 85%`);
     return { fpr: CORPORATE_FPR.pme, classe: "corp_pme" };
-  }
-
-  if (
-    corporate.financiamento === "objeto" ||
-    corporate.financiamento === "commodities"
-  ) {
-    steps.push("Financiamento especializado (objeto/commodities) ⇒ FPR 100%");
-    return { fpr: CORPORATE_FPR.financiamentoObjeto, classe: "corp_fin_esp" };
-  }
-
-  if (corporate.financiamento === "project") {
-    steps.push("Project finance ⇒ FPR 130%");
-    return { fpr: CORPORATE_FPR.projectFinance, classe: "corp_project" };
   }
 
   steps.push("Demais empresas não financeiras ⇒ FPR 100%");

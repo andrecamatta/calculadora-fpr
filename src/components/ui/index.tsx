@@ -16,15 +16,15 @@ interface SectionProps {
 }
 
 export const Section: React.FC<SectionProps> = ({ title, subtitle, children }) => (
-  <section className="mb-6">
+  <section className="mb-4">
     <h2 className="text-xl font-semibold mb-1">{title}</h2>
-    {subtitle && <p className="text-sm text-neutral-500 mb-3">{subtitle}</p>}
-    <div className="grid gap-3">{children}</div>
+    {subtitle && <p className="text-sm text-neutral-500 mb-2">{subtitle}</p>}
+    <div className="grid gap-2">{children}</div>
   </section>
 );
 
 export const Row: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="grid md:grid-cols-3 gap-3">{children}</div>
+  <div className="grid md:grid-cols-3 gap-2">{children}</div>
 );
 
 interface CardProps {
