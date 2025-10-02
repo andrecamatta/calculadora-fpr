@@ -72,7 +72,7 @@ export default function App() {
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Coluna 1 e 2: Formulários */}
-        <div className="lg:col-span-2 grid gap-6">
+        <div className="lg:col-span-2 grid gap-4">
           {/* EAD (Exposure at Default) - Primeiro: definir valor da exposição */}
           <Card title="EAD (Exposure at Default)" subtitle="Valor da exposição ao risco de crédito">
             <Row>
