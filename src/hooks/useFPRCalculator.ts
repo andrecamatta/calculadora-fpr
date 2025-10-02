@@ -36,8 +36,8 @@ export function useInitialInputs(): FPRInputs {
       },
 
       ifinfo: {
-        categoria: "B",
-        prazo90: true,
+        categoria: "A",
+        prazo90: false,
         tier1High: false,
         lrHigh: false,
         nettingElegivel: false,

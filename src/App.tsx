@@ -73,6 +73,46 @@ export default function App() {
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Coluna 1 e 2: Formulários */}
         <div className="lg:col-span-2 grid gap-6">
+          {/* EAD (Exposure at Default) - Primeiro: definir valor da exposição */}
+          <Card title="EAD (Exposure at Default)" subtitle="Valor da exposição ao risco de crédito">
+            <Row>
+              <FieldGroup label="Saldo devedor" tooltip={TOOLTIPS.saldoDevedor}>
+                <Input
+                  type="number"
+                  value={inputs.ead?.saldoDevedor ?? 0}
+                  onChange={(v) =>
+                    updateNested("ead", "saldoDevedor", Number(v))
+                  }
+                  placeholder="0,00"
+                />
+              </FieldGroup>
+
+              <FieldGroup label="Limite não utilizado" tooltip={TOOLTIPS.limiteNaoUtilizado}>
+                <Input
+                  type="number"
+                  value={inputs.ead?.limiteNaoUtilizado ?? 0}
+                  onChange={(v) =>
+                    updateNested("ead", "limiteNaoUtilizado", Number(v))
+                  }
+                  placeholder="0,00"
+                />
+              </FieldGroup>
+
+              <FieldGroup label="Tipo CCF" tooltip={TOOLTIPS.tipoCCF}>
+                <Select
+                  value={inputs.ead?.ccfTipo ?? "linha_revogavel"}
+                  onChange={(v) => updateNested("ead", "ccfTipo", v)}
+                >
+                  <option value="linha_irrevogavel">Linha irrevogável (50%)</option>
+                  <option value="linha_revogavel">Linha revogável (10%)</option>
+                  <option value="garantia_prestada">Garantia (100%)</option>
+                  <option value="comercio_exterior">Comércio ext. (20%)</option>
+                  <option value="outro">Outro (100%)</option>
+                </Select>
+              </FieldGroup>
+            </Row>
+          </Card>
+
           {/* Identificação */}
           <Card title="Identificação" subtitle="Produto e contraparte">
             <Row>
@@ -151,37 +191,6 @@ export default function App() {
               </Row>
             </Card>
           )}
-
-          {/* Inadimplência - PRIORIDADE MÁXIMA */}
-          <Card title="Inadimplência / Ativos Problemáticos">
-            <Row>
-              <FieldGroup label="Em inadimplência?" tooltip={TOOLTIPS.inadimplencia}>
-                <Switch
-                  checked={inputs.inadimplencia.emInadimplencia}
-                  onChange={(v) =>
-                    updateNested("inadimplencia", "emInadimplencia", v)
-                  }
-                />
-                <Helper>PRIORIDADE MÁXIMA - sobrepõe todos os outros cálculos</Helper>
-              </FieldGroup>
-
-              {inputs.inadimplencia.emInadimplencia && (
-                <FieldGroup label="Provisão (%)" tooltip={TOOLTIPS.provisao}>
-                  <Input
-                    type="number"
-                    value={inputs.inadimplencia.provisaoPercentual}
-                    onChange={(v) =>
-                      updateNested("inadimplencia", "provisaoPercentual", Number(v))
-                    }
-                    placeholder="0-100"
-                  />
-                  <Helper>
-                    &lt;20%: FPR 150% | 20-50%: FPR 100% | ≥50%: FPR 50%
-                  </Helper>
-                </FieldGroup>
-              )}
-            </Row>
-          </Card>
 
           {/* Corporate */}
           {inputs.contraparte === "corporate" && (
@@ -544,43 +553,34 @@ export default function App() {
             </Card>
           )}
 
-          {/* EAD */}
-          <Card title="EAD (Exposure at Default)">
+          {/* Inadimplência / Ativos Problemáticos - Status excepcional */}
+          <Card title="Inadimplência / Ativos Problemáticos">
             <Row>
-              <FieldGroup label="Saldo devedor" tooltip={TOOLTIPS.saldoDevedor}>
-                <Input
-                  type="number"
-                  value={inputs.ead?.saldoDevedor ?? 0}
+              <FieldGroup label="Em inadimplência?" tooltip={TOOLTIPS.inadimplencia}>
+                <Switch
+                  checked={inputs.inadimplencia.emInadimplencia}
                   onChange={(v) =>
-                    updateNested("ead", "saldoDevedor", Number(v))
+                    updateNested("inadimplencia", "emInadimplencia", v)
                   }
-                  placeholder="0,00"
                 />
+                <Helper>PRIORIDADE MÁXIMA - sobrepõe todos os outros cálculos</Helper>
               </FieldGroup>
 
-              <FieldGroup label="Limite não utilizado" tooltip={TOOLTIPS.limiteNaoUtilizado}>
-                <Input
-                  type="number"
-                  value={inputs.ead?.limiteNaoUtilizado ?? 0}
-                  onChange={(v) =>
-                    updateNested("ead", "limiteNaoUtilizado", Number(v))
-                  }
-                  placeholder="0,00"
-                />
-              </FieldGroup>
-
-              <FieldGroup label="Tipo CCF" tooltip={TOOLTIPS.tipoCCF}>
-                <Select
-                  value={inputs.ead?.ccfTipo ?? "linha_revogavel"}
-                  onChange={(v) => updateNested("ead", "ccfTipo", v)}
-                >
-                  <option value="linha_irrevogavel">Linha irrevogável (50%)</option>
-                  <option value="linha_revogavel">Linha revogável (10%)</option>
-                  <option value="garantia_prestada">Garantia (100%)</option>
-                  <option value="comercio_exterior">Comércio ext. (20%)</option>
-                  <option value="outro">Outro (100%)</option>
-                </Select>
-              </FieldGroup>
+              {inputs.inadimplencia.emInadimplencia && (
+                <FieldGroup label="Provisão (%)" tooltip={TOOLTIPS.provisao}>
+                  <Input
+                    type="number"
+                    value={inputs.inadimplencia.provisaoPercentual}
+                    onChange={(v) =>
+                      updateNested("inadimplencia", "provisaoPercentual", Number(v))
+                    }
+                    placeholder="0-100"
+                  />
+                  <Helper>
+                    &lt;20%: FPR 150% | 20-50%: FPR 100% | ≥50%: FPR 50%
+                  </Helper>
+                </FieldGroup>
+              )}
             </Row>
           </Card>
 
