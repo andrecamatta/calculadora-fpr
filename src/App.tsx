@@ -3,6 +3,7 @@ import { FPRInputs } from "./types";
 import { useFPRCalculator, useInitialInputs } from "./hooks/useFPRCalculator";
 import { applyScenario, getScenarioNames } from "./constants/scenarios";
 import { formatPercent, formatCurrency } from "./utils/formatters";
+import { TOOLTIPS } from "./constants/tooltipDefinitions";
 import {
   Row,
   Card,
@@ -75,7 +76,7 @@ export default function App() {
           {/* Identificação */}
           <Card title="Identificação" subtitle="Produto, contraparte e moeda">
             <Row>
-              <FieldGroup label="Produto">
+              <FieldGroup label="Produto" tooltip={TOOLTIPS.produto}>
                 <Select
                   value={inputs.produto}
                   onChange={(v: any) => updateField("produto", v)}
@@ -91,7 +92,7 @@ export default function App() {
                 </Select>
               </FieldGroup>
 
-              <FieldGroup label="Contraparte">
+              <FieldGroup label="Contraparte" tooltip={TOOLTIPS.contraparte}>
                 <Select
                   value={inputs.contraparte}
                   onChange={(v: any) => updateField("contraparte", v)}
@@ -108,7 +109,7 @@ export default function App() {
                 </Select>
               </FieldGroup>
 
-              <FieldGroup label="Moeda Exposição">
+              <FieldGroup label="Moeda Exposição" tooltip={TOOLTIPS.moedaExposicao}>
                 <Select
                   value={inputs.moedaExposicao}
                   onChange={(v: any) => updateField("moedaExposicao", v)}
@@ -122,7 +123,7 @@ export default function App() {
             </Row>
 
             <Row>
-              <FieldGroup label="Moeda Renda">
+              <FieldGroup label="Moeda Renda" tooltip={TOOLTIPS.moedaRenda}>
                 <Select
                   value={inputs.moedaRenda}
                   onChange={(v: any) => updateField("moedaRenda", v)}
@@ -134,7 +135,7 @@ export default function App() {
                 </Select>
               </FieldGroup>
 
-              <FieldGroup label="Hedge cambial ≥ 90%?">
+              <FieldGroup label="Hedge cambial ≥ 90%?" tooltip={TOOLTIPS.hedge90}>
                 <Switch
                   checked={inputs.hedge90}
                   onChange={(v) => updateField("hedge90", v)}
@@ -146,7 +147,7 @@ export default function App() {
           {/* Inadimplência - PRIORIDADE MÁXIMA */}
           <Card title="Inadimplência / Ativos Problemáticos">
             <Row>
-              <FieldGroup label="Em inadimplência?">
+              <FieldGroup label="Em inadimplência?" tooltip={TOOLTIPS.inadimplencia}>
                 <Switch
                   checked={inputs.inadimplencia.emInadimplencia}
                   onChange={(v) =>
@@ -157,7 +158,7 @@ export default function App() {
               </FieldGroup>
 
               {inputs.inadimplencia.emInadimplencia && (
-                <FieldGroup label="Provisão (%)">
+                <FieldGroup label="Provisão (%)" tooltip={TOOLTIPS.provisao}>
                   <Input
                     type="number"
                     value={inputs.inadimplencia.provisaoPercentual}
@@ -178,7 +179,7 @@ export default function App() {
           {inputs.contraparte === "corporate" && (
             <Card title="Corporate / Empresa Não Financeira">
               <Row>
-                <FieldGroup label="Grande baixo risco">
+                <FieldGroup label="Grande baixo risco" tooltip={TOOLTIPS.grandeBaixoRisco}>
                   <Switch
                     checked={inputs.corporate.grandeBaixoRisco}
                     onChange={(v) =>
@@ -188,7 +189,7 @@ export default function App() {
                   <Helper>Receita ≥ R$ 15bi + rating ≥ BB-</Helper>
                 </FieldGroup>
 
-                <FieldGroup label="PME">
+                <FieldGroup label="PME" tooltip={TOOLTIPS.pme}>
                   <Switch
                     checked={inputs.corporate.pme}
                     onChange={(v) => updateNested("corporate", "pme", v)}
@@ -196,7 +197,7 @@ export default function App() {
                   <Helper>Receita ≤ R$ 300MM</Helper>
                 </FieldGroup>
 
-                <FieldGroup label="Financiamento especializado">
+                <FieldGroup label="Financiamento especializado" tooltip={TOOLTIPS.financiamentoEspecializado}>
                   <Select
                     value={inputs.corporate.financiamento}
                     onChange={(v) => updateNested("corporate", "financiamento", v)}
@@ -210,7 +211,7 @@ export default function App() {
               </Row>
 
               <Row>
-                <FieldGroup label="Receita anual (R$)">
+                <FieldGroup label="Receita anual (R$)" tooltip={TOOLTIPS.receitaAnual}>
                   <Input
                     type="number"
                     value={inputs.corporate.receitaAnual ?? ""}
@@ -222,7 +223,7 @@ export default function App() {
                   <Helper>Para validação PME/Grande baixo risco</Helper>
                 </FieldGroup>
 
-                <FieldGroup label="Rating">
+                <FieldGroup label="Rating" tooltip={TOOLTIPS.ratingCorporate}>
                   <Select
                     value={inputs.corporate.rating ?? ""}
                     onChange={(v) =>
@@ -246,7 +247,7 @@ export default function App() {
           {inputs.contraparte === "pf" && (
             <Card title="Varejo / Pessoa Física">
               <Row>
-                <FieldGroup label="Varejo elegível">
+                <FieldGroup label="Varejo elegível" tooltip={TOOLTIPS.varejoElegivel}>
                   <Switch
                     checked={inputs.varejo.elegivel}
                     onChange={(v) => updateNested("varejo", "elegivel", v)}
@@ -254,14 +255,14 @@ export default function App() {
                   <Helper>Total exposição ≤ R$ 5MM (atualização 2024)</Helper>
                 </FieldGroup>
 
-                <FieldGroup label="Transactor (360d)">
+                <FieldGroup label="Transactor (360d)" tooltip={TOOLTIPS.transactor}>
                   <Switch
                     checked={inputs.varejo.transactor}
                     onChange={(v) => updateNested("varejo", "transactor", v)}
                   />
                 </FieldGroup>
 
-                <FieldGroup label="Linha sem saques 360d">
+                <FieldGroup label="Linha sem saques 360d" tooltip={TOOLTIPS.linhaSemSaques}>
                   <Switch
                     checked={inputs.varejo.linhaSemSaques360}
                     onChange={(v) =>
@@ -272,7 +273,7 @@ export default function App() {
               </Row>
 
               <Row>
-                <FieldGroup label="Consignado - prazo (anos)">
+                <FieldGroup label="Consignado - prazo (anos)" tooltip={TOOLTIPS.consignadoPrazo}>
                   <Input
                     type="number"
                     value={inputs.varejo.consignadoPrazoAnos ?? ""}
@@ -291,7 +292,7 @@ export default function App() {
           {inputs.produto === "credito_imobiliario" && (
             <Card title="Crédito Imobiliário">
               <Row>
-                <FieldGroup label="Tipo de imóvel">
+                <FieldGroup label="Tipo de imóvel" tooltip={TOOLTIPS.tipoImovel}>
                   <Select
                     value={inputs.imobiliario.tipo}
                     onChange={(v) => updateNested("imobiliario", "tipo", v)}
@@ -301,7 +302,7 @@ export default function App() {
                   </Select>
                 </FieldGroup>
 
-                <FieldGroup label="Dependência do fluxo">
+                <FieldGroup label="Dependência do fluxo" tooltip={TOOLTIPS.dependenciaFluxo}>
                   <Switch
                     checked={inputs.imobiliario.dependenciaFluxo}
                     onChange={(v) =>
@@ -310,7 +311,7 @@ export default function App() {
                   />
                 </FieldGroup>
 
-                <FieldGroup label="LTV (%)">
+                <FieldGroup label="LTV (%)" tooltip={TOOLTIPS.ltv}>
                   <Input
                     type="number"
                     value={inputs.imobiliario.ltv}
@@ -321,7 +322,7 @@ export default function App() {
               </Row>
 
               <Row>
-                <FieldGroup label="Garantia elegível">
+                <FieldGroup label="Garantia elegível" tooltip={TOOLTIPS.garantiaElegivel}>
                   <Switch
                     checked={inputs.imobiliario.garantiaElegivel}
                     onChange={(v) =>
@@ -330,7 +331,7 @@ export default function App() {
                   />
                 </FieldGroup>
 
-                <FieldGroup label="Imóvel concluído">
+                <FieldGroup label="Imóvel concluído" tooltip={TOOLTIPS.imovelConcluido}>
                   <Switch
                     checked={inputs.imobiliario.imovelConcluido}
                     onChange={(v) =>
@@ -342,7 +343,7 @@ export default function App() {
 
               {!inputs.imobiliario.imovelConcluido && (
                 <Row>
-                  <FieldGroup label="Contrato até 2023">
+                  <FieldGroup label="Contrato até 2023" tooltip={TOOLTIPS.contratoAte2023}>
                     <Switch
                       checked={inputs.imobiliario.contratoAte2023 ?? false}
                       onChange={(v) =>
@@ -352,7 +353,7 @@ export default function App() {
                     <Helper>Obra em andamento: FPR 50%</Helper>
                   </FieldGroup>
 
-                  <FieldGroup label="Contrato após 2024">
+                  <FieldGroup label="Contrato após 2024" tooltip={TOOLTIPS.contratoApos2024}>
                     <Switch
                       checked={inputs.imobiliario.contratoApos2024 ?? false}
                       onChange={(v) =>
@@ -370,7 +371,7 @@ export default function App() {
           {inputs.contraparte === "if" && (
             <Card title="Instituições Financeiras">
               <Row>
-                <FieldGroup label="Categoria">
+                <FieldGroup label="Categoria" tooltip={TOOLTIPS.categoriaIF}>
                   <Select
                     value={inputs.ifinfo.categoria}
                     onChange={(v) => updateNested("ifinfo", "categoria", v)}
@@ -381,14 +382,14 @@ export default function App() {
                   </Select>
                 </FieldGroup>
 
-                <FieldGroup label="Prazo ≤ 90 dias">
+                <FieldGroup label="Prazo ≤ 90 dias" tooltip={TOOLTIPS.prazo90}>
                   <Switch
                     checked={inputs.ifinfo.prazo90}
                     onChange={(v) => updateNested("ifinfo", "prazo90", v)}
                   />
                 </FieldGroup>
 
-                <FieldGroup label="Tier1 ≥ 14% e LR ≥ 5%">
+                <FieldGroup label="Tier1 ≥ 14% e LR ≥ 5%" tooltip={TOOLTIPS.tier1LR}>
                   <Switch
                     checked={inputs.ifinfo.tier1High && inputs.ifinfo.lrHigh}
                     onChange={(v) => {
@@ -400,7 +401,7 @@ export default function App() {
               </Row>
 
               <Row>
-                <FieldGroup label="Comércio exterior ≤ 1 ano">
+                <FieldGroup label="Comércio exterior ≤ 1 ano" tooltip={TOOLTIPS.comercioExterior}>
                   <Switch
                     checked={inputs.ifinfo.comercioExteriorAte1Ano}
                     onChange={(v) =>
@@ -409,7 +410,7 @@ export default function App() {
                   />
                 </FieldGroup>
 
-                <FieldGroup label="Netting elegível">
+                <FieldGroup label="Netting elegível" tooltip={TOOLTIPS.nettingElegivel}>
                   <Switch
                     checked={inputs.ifinfo.nettingElegivel}
                     onChange={(v) => updateNested("ifinfo", "nettingElegivel", v)}
@@ -423,7 +424,7 @@ export default function App() {
           {inputs.contraparte === "setor_publico" && (
             <Card title="Setor Público">
               <Row>
-                <FieldGroup label="Tipo">
+                <FieldGroup label="Tipo" tooltip={TOOLTIPS.tipoSetorPublico}>
                   <Select
                     value={inputs.setorPublico.tipo}
                     onChange={(v) => updateNested("setorPublico", "tipo", v)}
@@ -436,7 +437,7 @@ export default function App() {
                   </Select>
                 </FieldGroup>
 
-                <FieldGroup label="Rating (opcional)">
+                <FieldGroup label="Rating (opcional)" tooltip={TOOLTIPS.ratingSetorPublico}>
                   <Select
                     value={inputs.setorPublico.rating ?? ""}
                     onChange={(v) =>
@@ -460,7 +461,7 @@ export default function App() {
           {inputs.produto === "outro" && (
             <Card title="Outras Exposições (Art. 66)">
               <Row>
-                <FieldGroup label="Tipo de exposição">
+                <FieldGroup label="Tipo de exposição" tooltip={TOOLTIPS.outrasExposicoes}>
                   <Select
                     value={inputs.outrasExposicoes.tipo}
                     onChange={(v) => updateNested("outrasExposicoes", "tipo", v)}
@@ -481,7 +482,7 @@ export default function App() {
           {inputs.produto === "fundo" && (
             <Card title="Fundos">
               <Row>
-                <FieldGroup label="Abordagem">
+                <FieldGroup label="Abordagem" tooltip={TOOLTIPS.abordagemFundos}>
                   <Select
                     value={inputs.fundos.abordagem}
                     onChange={(v) => updateNested("fundos", "abordagem", v)}
@@ -493,7 +494,7 @@ export default function App() {
                 </FieldGroup>
 
                 {inputs.fundos.abordagem === "look-through" && (
-                  <FieldGroup label="FPR Look-Through (%)">
+                  <FieldGroup label="FPR Look-Through (%)" tooltip={TOOLTIPS.fprLookThrough}>
                     <Input
                       type="number"
                       value={inputs.fundos.fprLookThrough}
@@ -507,7 +508,7 @@ export default function App() {
                 )}
 
                 {inputs.fundos.abordagem === "mandato" && (
-                  <FieldGroup label="Tipo de fundo">
+                  <FieldGroup label="Tipo de fundo" tooltip={TOOLTIPS.tipoFundo}>
                     <Select
                       value={inputs.fundos.tipo ?? ""}
                       onChange={(v) =>
@@ -529,7 +530,7 @@ export default function App() {
           {/* EAD */}
           <Card title="EAD (Exposure at Default)">
             <Row>
-              <FieldGroup label="Saldo devedor">
+              <FieldGroup label="Saldo devedor" tooltip={TOOLTIPS.saldoDevedor}>
                 <Input
                   type="number"
                   value={inputs.ead?.saldoDevedor ?? 0}
@@ -540,7 +541,7 @@ export default function App() {
                 />
               </FieldGroup>
 
-              <FieldGroup label="Limite não utilizado">
+              <FieldGroup label="Limite não utilizado" tooltip={TOOLTIPS.limiteNaoUtilizado}>
                 <Input
                   type="number"
                   value={inputs.ead?.limiteNaoUtilizado ?? 0}
@@ -551,7 +552,7 @@ export default function App() {
                 />
               </FieldGroup>
 
-              <FieldGroup label="Tipo CCF">
+              <FieldGroup label="Tipo CCF" tooltip={TOOLTIPS.tipoCCF}>
                 <Select
                   value={inputs.ead?.ccfTipo ?? "linha_revogavel"}
                   onChange={(v) => updateNested("ead", "ccfTipo", v)}
@@ -569,7 +570,7 @@ export default function App() {
           {/* CRM e Especiais */}
           <Card title="CRM e Especiais">
             <Row>
-              <FieldGroup label="Substituição por garantidor">
+              <FieldGroup label="Substituição por garantidor" tooltip={TOOLTIPS.substituicaoGarantidor}>
                 <Switch
                   checked={inputs.crm.substituicaoGarantidor}
                   onChange={(v) =>
@@ -578,7 +579,7 @@ export default function App() {
                 />
               </FieldGroup>
 
-              <FieldGroup label="FPR do garantidor (%)">
+              <FieldGroup label="FPR do garantidor (%)" tooltip={TOOLTIPS.fprGarantidor}>
                 <Input
                   type="number"
                   value={inputs.crm.fprGarantidor}
@@ -588,7 +589,7 @@ export default function App() {
                 />
               </FieldGroup>
 
-              <FieldGroup label="Seguro de crédito (Res. 324/2023)">
+              <FieldGroup label="Seguro de crédito (Res. 324/2023)" tooltip={TOOLTIPS.seguroCredito}>
                 <Switch
                   checked={inputs.crm.seguroCredito ?? false}
                   onChange={(v) => updateNested("crm", "seguroCredito", v)}
@@ -597,14 +598,14 @@ export default function App() {
             </Row>
 
             <Row>
-              <FieldGroup label="Subordinado">
+              <FieldGroup label="Subordinado" tooltip={TOOLTIPS.subordinado}>
                 <Switch
                   checked={inputs.especiais.subordinado}
                   onChange={(v) => updateNested("especiais", "subordinado", v)}
                 />
               </FieldGroup>
 
-              <FieldGroup label="Equity">
+              <FieldGroup label="Equity" tooltip={TOOLTIPS.equity}>
                 <Select
                   value={inputs.especiais.equity}
                   onChange={(v) => updateNested("especiais", "equity", v)}
@@ -615,7 +616,7 @@ export default function App() {
                 </Select>
               </FieldGroup>
 
-              <FieldGroup label="Crédito tributário">
+              <FieldGroup label="Crédito tributário" tooltip={TOOLTIPS.creditoTributario}>
                 <Select
                   value={inputs.especiais.creditoTributario}
                   onChange={(v) =>
@@ -631,7 +632,7 @@ export default function App() {
             </Row>
 
             <Row>
-              <FieldGroup label="Ajuste negativo PL (Res. 452/2025)">
+              <FieldGroup label="Ajuste negativo PL (Res. 452/2025)" tooltip={TOOLTIPS.ajusteNegativoPL}>
                 <Switch
                   checked={inputs.especiais.ajusteNegativoPL ?? false}
                   onChange={(v) =>
@@ -640,7 +641,7 @@ export default function App() {
                 />
               </FieldGroup>
 
-              <FieldGroup label="Caixa fora da posse direta">
+              <FieldGroup label="Caixa fora da posse direta" tooltip={TOOLTIPS.caixaForaPosse}>
                 <Switch
                   checked={inputs.pisos.caixaForaPosseDireta}
                   onChange={(v) =>

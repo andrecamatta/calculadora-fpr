@@ -4,6 +4,10 @@
  */
 
 import React from "react";
+import { Tooltip, TooltipConfig } from "./Tooltip";
+
+export { Tooltip };
+export type { TooltipConfig };
 
 interface SectionProps {
   title: string;
@@ -38,8 +42,16 @@ export const Card: React.FC<CardProps> = ({ title, subtitle, children, className
   </div>
 );
 
-export const Label: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <label className="text-sm font-medium block mb-1">{children}</label>
+interface LabelProps {
+  children: React.ReactNode;
+  tooltip?: TooltipConfig;
+}
+
+export const Label: React.FC<LabelProps> = ({ children, tooltip }) => (
+  <label className="text-sm font-medium block mb-1 flex items-center">
+    <span>{children}</span>
+    {tooltip && <Tooltip config={tooltip} />}
+  </label>
 );
 
 interface SelectProps {
@@ -147,11 +159,12 @@ interface FieldGroupProps {
   label: string;
   helper?: string;
   children: React.ReactNode;
+  tooltip?: TooltipConfig;
 }
 
-export const FieldGroup: React.FC<FieldGroupProps> = ({ label, helper, children }) => (
+export const FieldGroup: React.FC<FieldGroupProps> = ({ label, helper, children, tooltip }) => (
   <div>
-    <Label>{label}</Label>
+    <Label tooltip={tooltip}>{label}</Label>
     {children}
     {helper && <Helper>{helper}</Helper>}
   </div>
