@@ -111,44 +111,46 @@ export default function App() {
             </Row>
           </Card>
 
-          {/* Descasamento Cambial */}
-          <Card title="Descasamento Cambial" subtitle="Ajuste de FPR por moeda">
-            <Row>
-              <FieldGroup label="Moeda Exposição" tooltip={TOOLTIPS.moedaExposicao}>
-                <Select
-                  value={inputs.moedaExposicao}
-                  onChange={(v: any) => updateField("moedaExposicao", v)}
-                >
-                  <option value="BRL">BRL</option>
-                  <option value="USD">USD</option>
-                  <option value="EUR">EUR</option>
-                  <option value="Outra">Outra</option>
-                </Select>
-              </FieldGroup>
+          {/* Descasamento Cambial - Aplicável apenas a Varejo e Imobiliário */}
+          {(inputs.contraparte === "pf" || inputs.produto === "credito_imobiliario") && (
+            <Card title="Descasamento Cambial" subtitle="Ajuste de FPR por moeda">
+              <Row>
+                <FieldGroup label="Moeda Exposição" tooltip={TOOLTIPS.moedaExposicao}>
+                  <Select
+                    value={inputs.moedaExposicao}
+                    onChange={(v: any) => updateField("moedaExposicao", v)}
+                  >
+                    <option value="BRL">BRL</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="Outra">Outra</option>
+                  </Select>
+                </FieldGroup>
 
-              <FieldGroup label="Moeda Renda" tooltip={TOOLTIPS.moedaRenda}>
-                <Select
-                  value={inputs.moedaRenda}
-                  onChange={(v: any) => updateField("moedaRenda", v)}
-                >
-                  <option value="BRL">BRL</option>
-                  <option value="USD">USD</option>
-                  <option value="EUR">EUR</option>
-                  <option value="Outra">Outra</option>
-                </Select>
-              </FieldGroup>
+                <FieldGroup label="Moeda Renda" tooltip={TOOLTIPS.moedaRenda}>
+                  <Select
+                    value={inputs.moedaRenda}
+                    onChange={(v: any) => updateField("moedaRenda", v)}
+                  >
+                    <option value="BRL">BRL</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="Outra">Outra</option>
+                  </Select>
+                </FieldGroup>
 
-              <FieldGroup label="Hedge cambial ≥ 90%?" tooltip={TOOLTIPS.hedge90}>
-                <Switch
-                  checked={inputs.hedge90}
-                  onChange={(v) => updateField("hedge90", v)}
-                />
-                <Helper>
-                  Ajuste cambial (FPR × 1,5, máx. 150%) aplicável apenas a varejo elegível e imobiliário residencial
-                </Helper>
-              </FieldGroup>
-            </Row>
-          </Card>
+                <FieldGroup label="Hedge cambial ≥ 90%?" tooltip={TOOLTIPS.hedge90}>
+                  <Switch
+                    checked={inputs.hedge90}
+                    onChange={(v) => updateField("hedge90", v)}
+                  />
+                  <Helper>
+                    Ajuste cambial (FPR × 1,5, máx. 150%) aplicável apenas a varejo elegível e imobiliário residencial
+                  </Helper>
+                </FieldGroup>
+              </Row>
+            </Card>
+          )}
 
           {/* Inadimplência - PRIORIDADE MÁXIMA */}
           <Card title="Inadimplência / Ativos Problemáticos">
@@ -216,36 +218,45 @@ export default function App() {
                 </FieldGroup>
               </Row>
 
-              <Row>
-                <FieldGroup label="Receita anual (R$)" tooltip={TOOLTIPS.receitaAnual}>
-                  <Input
-                    type="number"
-                    value={inputs.corporate.receitaAnual ?? ""}
-                    onChange={(v) =>
-                      updateNested("corporate", "receitaAnual", v ? Number(v) : undefined)
-                    }
-                    placeholder="Ex: 250000000"
-                  />
-                  <Helper>Para validação PME/Grande baixo risco</Helper>
-                </FieldGroup>
+              {/* Campos de validação de elegibilidade - aparecem apenas quando relevantes */}
+              {(inputs.corporate.grandeBaixoRisco || inputs.corporate.pme) && (
+                <Row>
+                  <FieldGroup label="Receita anual (R$)" tooltip={TOOLTIPS.receitaAnual}>
+                    <Input
+                      type="number"
+                      value={inputs.corporate.receitaAnual ?? ""}
+                      onChange={(v) =>
+                        updateNested("corporate", "receitaAnual", v ? Number(v) : undefined)
+                      }
+                      placeholder="Ex: 250000000"
+                    />
+                    <Helper>
+                      Validação de elegibilidade (não afeta FPR): PME ≤ R$300MM, Grande ≥ R$15bi
+                    </Helper>
+                  </FieldGroup>
 
-                <FieldGroup label="Rating" tooltip={TOOLTIPS.ratingCorporate}>
-                  <Select
-                    value={inputs.corporate.rating ?? ""}
-                    onChange={(v) =>
-                      updateNested("corporate", "rating", v || undefined)
-                    }
-                  >
-                    <option value="">Sem rating</option>
-                    <option value="AAA_AA-">AAA a AA-</option>
-                    <option value="A+_A-">A+ a A-</option>
-                    <option value="BBB+_BBB-">BBB+ a BBB-</option>
-                    <option value="BB+_B-">BB+ a B-</option>
-                    <option value="inferior_B-">Inferior a B-</option>
-                  </Select>
-                  <Helper>Para validação Grande baixo risco</Helper>
-                </FieldGroup>
-              </Row>
+                  {inputs.corporate.grandeBaixoRisco && (
+                    <FieldGroup label="Rating" tooltip={TOOLTIPS.ratingCorporate}>
+                      <Select
+                        value={inputs.corporate.rating ?? ""}
+                        onChange={(v) =>
+                          updateNested("corporate", "rating", v || undefined)
+                        }
+                      >
+                        <option value="">Sem rating</option>
+                        <option value="AAA_AA-">AAA a AA-</option>
+                        <option value="A+_A-">A+ a A-</option>
+                        <option value="BBB+_BBB-">BBB+ a BBB-</option>
+                        <option value="BB+_B-">BB+ a B-</option>
+                        <option value="inferior_B-">Inferior a B-</option>
+                      </Select>
+                      <Helper>
+                        Validação de elegibilidade (não afeta FPR): requer rating ≥ BB-
+                      </Helper>
+                    </FieldGroup>
+                  )}
+                </Row>
+              )}
             </Card>
           )}
 

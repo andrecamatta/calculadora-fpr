@@ -85,14 +85,14 @@ export const TOOLTIPS: TooltipDefinitions = {
 
   receitaAnual: {
     description:
-      "Receita bruta anual da empresa. Usado para validar elegibilidade PME (≤R$ 300MM) e Grande Baixo Risco (≥R$ 15bi).",
+      "Receita bruta anual da empresa. Usado para VALIDAÇÃO de elegibilidade (não afeta o cálculo do FPR): PME ≤R$ 300MM e Grande Baixo Risco ≥R$ 15bi. O FPR é determinado pelo checkbox marcado (PME=85%, Grande=65%), independente da receita informada.",
     article: "Arts. 37-38",
     regulation: "Res. BCB 229/2022",
   },
 
   ratingCorporate: {
     description:
-      "Rating de crédito da contraparte. Obrigatório para Grande Baixo Risco (mínimo BB-).",
+      "Rating de crédito da contraparte. Usado para VALIDAÇÃO de elegibilidade Grande Baixo Risco (requer rating ≥ BB-). NÃO afeta o cálculo do FPR - apenas emite aviso se rating for inferior ao mínimo regulatório. O FPR de Grande Baixo Risco é sempre 65%.",
     article: "Art. 37",
     regulation: "Res. BCB 229/2022",
   },
