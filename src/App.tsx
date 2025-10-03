@@ -682,7 +682,7 @@ export default function App() {
             </div>
           </Card>
 
-          <Card title="Trilha de decisão">
+          <Accordion title="Trilha de decisão" subtitle="Passo a passo do cálculo">
             <ol className="list-decimal ml-5 space-y-1 text-xs">
               {result.steps.map((step, i) => (
                 <li key={i} className="leading-relaxed">
@@ -690,9 +690,9 @@ export default function App() {
                 </li>
               ))}
             </ol>
-          </Card>
+          </Accordion>
 
-          <Card title="Cenários de teste">
+          <Accordion title="Cenários de teste" subtitle="Casos de uso pré-configurados">
             <div className="space-y-2">
               {getScenarioNames().map((name) => (
                 <Button
@@ -704,7 +704,7 @@ export default function App() {
                 </Button>
               ))}
             </div>
-          </Card>
+          </Accordion>
 
           <Button onClick={exportJSON} variant="primary">
             📋 Exportar JSON
