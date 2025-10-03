@@ -112,7 +112,7 @@ export function useInitialInputs(): FPRInputs {
       ead: {
         saldoDevedor: 1000,
         limiteNaoUtilizado: 0,
-        ccfTipo: "linha_revogavel",
+        ccfTipo: "outro",
       },
 
       segmentoPrudencial: "S2",

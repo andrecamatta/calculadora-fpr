@@ -13,6 +13,7 @@ import {
   Button,
   FieldGroup,
   Helper,
+  Accordion,
 } from "./components/ui";
 
 /**
@@ -72,7 +73,7 @@ export default function App() {
 
       <div className="grid lg:grid-cols-3 gap-4">
         {/* Coluna 1 e 2: Formulários */}
-        <div className="lg:col-span-2 grid gap-3">
+        <div className="lg:col-span-2 grid gap-6 auto-rows-min">
           {/* EAD (Exposure at Default) - Primeiro: definir valor da exposição */}
           <Card title="EAD (Exposure at Default)" subtitle="Valor da exposição ao risco de crédito">
             <Row>
@@ -100,7 +101,7 @@ export default function App() {
 
               <FieldGroup label="Tipo CCF" tooltip={TOOLTIPS.tipoCCF}>
                 <Select
-                  value={inputs.ead?.ccfTipo ?? "linha_revogavel"}
+                  value={inputs.ead?.ccfTipo ?? "outro"}
                   onChange={(v) => updateNested("ead", "ccfTipo", v)}
                 >
                   <option value="linha_irrevogavel">Linha irrevogável (50%)</option>
@@ -138,14 +139,14 @@ export default function App() {
                   onChange={(v: any) => updateField("contraparte", v)}
                 >
                   <option value="corporate">Empresa não financeira</option>
-                  <option value="pf">Pessoa Física</option>
                   <option value="if">Instituição Financeira</option>
+                  <option value="setor_publico">Setor Público</option>
+                  <option value="pf">Pessoa Física</option>
                   <option value="soberano_br">Soberano BR/BCB</option>
                   <option value="bndes">BNDES</option>
                   <option value="soberano_estrangeiro">
                     Soberano estrangeiro
                   </option>
-                  <option value="setor_publico">Setor Público</option>
                 </Select>
               </FieldGroup>
             </Row>
@@ -226,46 +227,6 @@ export default function App() {
                   </Select>
                 </FieldGroup>
               </Row>
-
-              {/* Campos de validação de elegibilidade - aparecem apenas quando relevantes */}
-              {(inputs.corporate.grandeBaixoRisco || inputs.corporate.pme) && (
-                <Row>
-                  <FieldGroup label="Receita anual (R$)" tooltip={TOOLTIPS.receitaAnual}>
-                    <Input
-                      type="number"
-                      value={inputs.corporate.receitaAnual ?? ""}
-                      onChange={(v) =>
-                        updateNested("corporate", "receitaAnual", v ? Number(v) : undefined)
-                      }
-                      placeholder="Ex: 250000000"
-                    />
-                    <Helper>
-                      Validação de elegibilidade (não afeta FPR): PME ≤ R$300MM, Grande ≥ R$15bi
-                    </Helper>
-                  </FieldGroup>
-
-                  {inputs.corporate.grandeBaixoRisco && (
-                    <FieldGroup label="Rating" tooltip={TOOLTIPS.ratingCorporate}>
-                      <Select
-                        value={inputs.corporate.rating ?? ""}
-                        onChange={(v) =>
-                          updateNested("corporate", "rating", v || undefined)
-                        }
-                      >
-                        <option value="">Sem rating</option>
-                        <option value="AAA_AA-">AAA a AA-</option>
-                        <option value="A+_A-">A+ a A-</option>
-                        <option value="BBB+_BBB-">BBB+ a BBB-</option>
-                        <option value="BB+_B-">BB+ a B-</option>
-                        <option value="inferior_B-">Inferior a B-</option>
-                      </Select>
-                      <Helper>
-                        Validação de elegibilidade (não afeta FPR): requer rating ≥ BB-
-                      </Helper>
-                    </FieldGroup>
-                  )}
-                </Row>
-              )}
             </Card>
           )}
 
@@ -554,93 +515,99 @@ export default function App() {
           )}
 
           {/* CRM e Especiais */}
-          <Card title="CRM e Especiais">
-            <Row>
-              <FieldGroup label="Substituição por garantidor" tooltip={TOOLTIPS.substituicaoGarantidor}>
-                <Switch
-                  checked={inputs.crm.substituicaoGarantidor}
-                  onChange={(v) =>
-                    updateNested("crm", "substituicaoGarantidor", v)
-                  }
-                />
-              </FieldGroup>
+          <Accordion title="CRM e Especiais" subtitle="Mitigadores de risco e exposições especiais (opcional)">
+            <div className="space-y-4">
+              <Row>
+                <FieldGroup label="Substituição por garantidor" tooltip={TOOLTIPS.substituicaoGarantidor}>
+                  <Switch
+                    checked={inputs.crm.substituicaoGarantidor}
+                    onChange={(v) =>
+                      updateNested("crm", "substituicaoGarantidor", v)
+                    }
+                  />
+                </FieldGroup>
 
-              <FieldGroup label="FPR do garantidor (%)" tooltip={TOOLTIPS.fprGarantidor}>
-                <Input
-                  type="number"
-                  value={inputs.crm.fprGarantidor}
-                  onChange={(v) =>
-                    updateNested("crm", "fprGarantidor", Number(v))
-                  }
-                />
-              </FieldGroup>
+                <FieldGroup label="FPR do garantidor (%)" tooltip={TOOLTIPS.fprGarantidor}>
+                  <Input
+                    type="number"
+                    value={inputs.crm.fprGarantidor}
+                    onChange={(v) =>
+                      updateNested("crm", "fprGarantidor", Number(v))
+                    }
+                  />
+                </FieldGroup>
 
-              <FieldGroup label="Seguro de crédito (Res. 324/2023)" tooltip={TOOLTIPS.seguroCredito}>
-                <Switch
-                  checked={inputs.crm.seguroCredito ?? false}
-                  onChange={(v) => updateNested("crm", "seguroCredito", v)}
-                />
-              </FieldGroup>
-            </Row>
+                <FieldGroup label="Seguro de crédito (Res. 324/2023)" tooltip={TOOLTIPS.seguroCredito}>
+                  <Switch
+                    checked={inputs.crm.seguroCredito ?? false}
+                    onChange={(v) => updateNested("crm", "seguroCredito", v)}
+                  />
+                </FieldGroup>
+              </Row>
 
-            <Row>
-              <FieldGroup label="Subordinado" tooltip={TOOLTIPS.subordinado}>
-                <Switch
-                  checked={inputs.especiais.subordinado}
-                  onChange={(v) => updateNested("especiais", "subordinado", v)}
-                />
-              </FieldGroup>
+              <div className="border-t pt-4">
+                <Row>
+                  <FieldGroup label="Subordinado" tooltip={TOOLTIPS.subordinado}>
+                    <Switch
+                      checked={inputs.especiais.subordinado}
+                      onChange={(v) => updateNested("especiais", "subordinado", v)}
+                    />
+                  </FieldGroup>
 
-              <FieldGroup label="Equity" tooltip={TOOLTIPS.equity}>
-                <Select
-                  value={inputs.especiais.equity}
-                  onChange={(v) => updateNested("especiais", "equity", v)}
-                >
-                  <option value="nao">Não</option>
-                  <option value="250">250%</option>
-                  <option value="1250">1.250%</option>
-                </Select>
-              </FieldGroup>
+                  <FieldGroup label="Equity" tooltip={TOOLTIPS.equity}>
+                    <Select
+                      value={inputs.especiais.equity}
+                      onChange={(v) => updateNested("especiais", "equity", v)}
+                    >
+                      <option value="nao">Não</option>
+                      <option value="250">250%</option>
+                      <option value="1250">1.250%</option>
+                    </Select>
+                  </FieldGroup>
 
-              <FieldGroup label="Crédito tributário" tooltip={TOOLTIPS.creditoTributario}>
-                <Select
-                  value={inputs.especiais.creditoTributario}
-                  onChange={(v) =>
-                    updateNested("especiais", "creditoTributario", v)
-                  }
-                >
-                  <option value="nao">Não</option>
-                  <option value="100">100%</option>
-                  <option value="600">600%</option>
-                  <option value="1250">1.250%</option>
-                </Select>
-              </FieldGroup>
-            </Row>
+                  <FieldGroup label="Crédito tributário" tooltip={TOOLTIPS.creditoTributario}>
+                    <Select
+                      value={inputs.especiais.creditoTributario}
+                      onChange={(v) =>
+                        updateNested("especiais", "creditoTributario", v)
+                      }
+                    >
+                      <option value="nao">Não</option>
+                      <option value="100">100%</option>
+                      <option value="600">600%</option>
+                      <option value="1250">1.250%</option>
+                    </Select>
+                  </FieldGroup>
+                </Row>
+              </div>
 
-            <Row>
-              <FieldGroup label="Ajuste negativo PL (Res. 452/2025)" tooltip={TOOLTIPS.ajusteNegativoPL}>
-                <Switch
-                  checked={inputs.especiais.ajusteNegativoPL ?? false}
-                  onChange={(v) =>
-                    updateNested("especiais", "ajusteNegativoPL", v)
-                  }
-                />
-              </FieldGroup>
+              <div className="border-t pt-4">
+                <Row>
+                  <FieldGroup label="Ajuste negativo PL (Res. 452/2025)" tooltip={TOOLTIPS.ajusteNegativoPL}>
+                    <Switch
+                      checked={inputs.especiais.ajusteNegativoPL ?? false}
+                      onChange={(v) =>
+                        updateNested("especiais", "ajusteNegativoPL", v)
+                      }
+                    />
+                  </FieldGroup>
 
-              <FieldGroup label="Caixa fora da posse direta" tooltip={TOOLTIPS.caixaForaPosse}>
-                <Switch
-                  checked={inputs.pisos.caixaForaPosseDireta}
-                  onChange={(v) =>
-                    updateNested("pisos", "caixaForaPosseDireta", v)
-                  }
-                />
-                <Helper>Piso de 20%</Helper>
-              </FieldGroup>
-            </Row>
-          </Card>
+                  <FieldGroup label="Caixa fora da posse direta" tooltip={TOOLTIPS.caixaForaPosse}>
+                    <Switch
+                      checked={inputs.pisos.caixaForaPosseDireta}
+                      onChange={(v) =>
+                        updateNested("pisos", "caixaForaPosseDireta", v)
+                      }
+                    />
+                    <Helper>Piso de 20%</Helper>
+                  </FieldGroup>
+                </Row>
+              </div>
+            </div>
+          </Accordion>
 
           {/* Inadimplência / Ativos Problemáticos - Status excepcional */}
-          <Card title="Inadimplência / Ativos Problemáticos">
+          <Accordion title="Inadimplência / Ativos Problemáticos" subtitle="Status excepcional da exposição (opcional)">
             <Row>
               <FieldGroup label="Em inadimplência?" tooltip={TOOLTIPS.inadimplencia}>
                 <Switch
@@ -668,7 +635,7 @@ export default function App() {
                 </FieldGroup>
               )}
             </Row>
-          </Card>
+          </Accordion>
         </div>
 
         {/* Coluna 3: Resultado */}

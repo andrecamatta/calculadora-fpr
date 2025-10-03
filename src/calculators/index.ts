@@ -37,7 +37,6 @@ export function calculateFPRComplete(inputs: FPRInputs): FPRResult {
     eadFinal = eadResult.ead;
 
     // Adiciona passos de EAD
-    steps.push(""); // Separador visual
     steps.push("📊 Cálculo de EAD:");
     steps.push(...eadResult.steps);
 
@@ -53,7 +52,6 @@ export function calculateFPRComplete(inputs: FPRInputs): FPRResult {
 
       const haircutDesc = getHaircutDescription(haircutResult);
       if (haircutDesc.length > 0) {
-        steps.push("");
         steps.push("🛡️ Mitigação por colaterais:");
         steps.push(...haircutDesc);
         steps.push(
@@ -67,7 +65,6 @@ export function calculateFPRComplete(inputs: FPRInputs): FPRResult {
     // 5. Calcula RWACPAD = EAD × FPR
     rwacpad = (eadAjustado * fpr) / 100;
 
-    steps.push("");
     steps.push("💰 RWACPAD:");
     steps.push(
       `RWACPAD = EAD × FPR = ${eadAjustado.toLocaleString("pt-BR", { minimumFractionDigits: 2 })} × ${fpr.toFixed(1)}% = ${rwacpad.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`

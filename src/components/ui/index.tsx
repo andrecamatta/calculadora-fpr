@@ -24,35 +24,125 @@ export const Section: React.FC<SectionProps> = ({ title, subtitle, children }) =
 );
 
 export const Row: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="grid md:grid-cols-3 gap-3 items-start">{children}</div>
+  <div className="grid md:grid-cols-3 gap-2 items-start auto-rows-min">{children}</div>
 );
 
 interface CardProps {
   title?: string;
   subtitle?: string;
+  titleTooltip?: TooltipConfig;
   children: React.ReactNode;
   className?: string;
 }
 
-export const Card: React.FC<CardProps> = ({ title, subtitle, children, className = "" }) => (
-  <div className={`rounded-2xl border p-4 shadow-sm bg-white/5 ${className}`}>
-    {title && <h3 className="font-medium text-sm">{title}</h3>}
-    {subtitle && <p className="text-xs text-neutral-500">{subtitle}</p>}
-    {children}
-  </div>
-);
+export const Card: React.FC<CardProps> = ({ title, subtitle, titleTooltip, children, className = "" }) => {
+  const [isTooltipVisible, setIsTooltipVisible] = React.useState(false);
+
+  return (
+    <div className={`rounded-2xl border p-1.5 shadow-sm bg-white self-start ${className}`}>
+      {title && (
+        <div className="relative">
+          <h3
+            className={`font-medium text-sm mb-0.5 ${titleTooltip ? 'cursor-help' : ''}`}
+            onMouseEnter={() => titleTooltip && setIsTooltipVisible(true)}
+            onMouseLeave={() => setIsTooltipVisible(false)}
+          >
+            {title}
+          </h3>
+
+          {/* Tooltip content para o título */}
+          {titleTooltip && isTooltipVisible && (
+            <div
+              className="absolute z-50 left-0 bottom-full mb-2 w-80 p-3 rounded-lg shadow-lg border bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-sm"
+              role="tooltip"
+            >
+              {/* Seta do tooltip */}
+              <div className="absolute left-2 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-neutral-200 dark:border-t-neutral-700" />
+              <div className="absolute left-2 top-full -mt-px w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-white dark:border-t-neutral-800" />
+
+              {/* Descrição */}
+              <p className="text-neutral-700 dark:text-neutral-200 mb-2 leading-relaxed">
+                {titleTooltip.description}
+              </p>
+
+              {/* Referências normativas */}
+              <div className="text-xs space-y-1 pt-2 border-t border-neutral-200 dark:border-neutral-700">
+                <div className="flex items-start">
+                  <span className="text-neutral-500 dark:text-neutral-400 mr-2">📖</span>
+                  <span className="text-neutral-600 dark:text-neutral-300 font-mono">
+                    {titleTooltip.article}
+                  </span>
+                </div>
+                <div className="flex items-start">
+                  <span className="text-neutral-500 dark:text-neutral-400 mr-2">📜</span>
+                  <span className="text-neutral-600 dark:text-neutral-300 font-medium">
+                    {titleTooltip.regulation}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+      {subtitle && <p className="text-xs text-neutral-500 mb-1.5">{subtitle}</p>}
+      {children}
+    </div>
+  );
+};
 
 interface LabelProps {
   children: React.ReactNode;
   tooltip?: TooltipConfig;
 }
 
-export const Label: React.FC<LabelProps> = ({ children, tooltip }) => (
-  <label className="text-xs font-medium block flex items-center mb-1">
-    <span>{children}</span>
-    {tooltip && <Tooltip config={tooltip} />}
-  </label>
-);
+export const Label: React.FC<LabelProps> = ({ children, tooltip }) => {
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  return (
+    <div className="relative">
+      <label
+        className="text-xs font-medium block mb-1 cursor-help"
+        onMouseEnter={() => tooltip && setIsVisible(true)}
+        onMouseLeave={() => setIsVisible(false)}
+      >
+        {children}
+      </label>
+
+      {/* Tooltip content */}
+      {tooltip && isVisible && (
+        <div
+          className="absolute z-50 left-0 bottom-full mb-2 w-80 p-3 rounded-lg shadow-lg border bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-sm"
+          role="tooltip"
+        >
+          {/* Seta do tooltip */}
+          <div className="absolute left-2 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-neutral-200 dark:border-t-neutral-700" />
+          <div className="absolute left-2 top-full -mt-px w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-white dark:border-t-neutral-800" />
+
+          {/* Descrição */}
+          <p className="text-neutral-700 dark:text-neutral-200 mb-2 leading-relaxed">
+            {tooltip.description}
+          </p>
+
+          {/* Referências normativas */}
+          <div className="text-xs space-y-1 pt-2 border-t border-neutral-200 dark:border-neutral-700">
+            <div className="flex items-start">
+              <span className="text-neutral-500 dark:text-neutral-400 mr-2">📖</span>
+              <span className="text-neutral-600 dark:text-neutral-300 font-mono">
+                {tooltip.article}
+              </span>
+            </div>
+            <div className="flex items-start">
+              <span className="text-neutral-500 dark:text-neutral-400 mr-2">📜</span>
+              <span className="text-neutral-600 dark:text-neutral-300 font-medium">
+                {tooltip.regulation}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 interface SelectProps {
   value: string;
@@ -169,3 +259,47 @@ export const FieldGroup: React.FC<FieldGroupProps> = ({ label, helper, children,
     {helper && <Helper>{helper}</Helper>}
   </div>
 );
+
+interface AccordionProps {
+  title: string;
+  subtitle?: string;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}
+
+export const Accordion: React.FC<AccordionProps> = ({
+  title,
+  subtitle,
+  children,
+  defaultOpen = false
+}) => {
+  const [isOpen, setIsOpen] = React.useState(defaultOpen);
+
+  return (
+    <div className="rounded-2xl border shadow-sm bg-white self-start">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full p-1.5 flex items-center justify-between hover:bg-neutral-50 rounded-t-2xl transition-colors"
+        type="button"
+      >
+        <div className="text-left">
+          <h3 className="font-medium text-sm">{title}</h3>
+          {subtitle && <p className="text-xs text-neutral-500">{subtitle}</p>}
+        </div>
+        <svg
+          className={`w-5 h-5 text-neutral-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {isOpen && (
+        <div className="p-1.5 pt-0">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+};

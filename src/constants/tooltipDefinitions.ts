@@ -280,6 +280,13 @@ export const TOOLTIPS: TooltipDefinitions = {
   },
 
   // ===== CRM (CREDIT RISK MITIGATION) =====
+  crmEspeciaisCard: {
+    description:
+      "CRM (Credit Risk Mitigation) são técnicas regulatórias de mitigação de risco de crédito, incluindo substituição por garantidor, seguros de crédito, etc. 'Especiais' engloba exposições com tratamento diferenciado como instrumentos subordinados, equity, créditos tributários e ajustes negativos no PL.",
+    article: "Arts. 18-21 (CRM), Arts. 57-62 (Especiais)",
+    regulation: "Res. BCB 229/2022 e Circular BCB 3.809/2016",
+  },
+
   substituicaoGarantidor: {
     description:
       "Substituição do FPR do devedor pelo FPR de um garantidor elegível (avalista, fiador, seguradora, etc.).",
