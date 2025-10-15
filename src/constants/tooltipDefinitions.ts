@@ -227,6 +227,21 @@ export const TOOLTIPS: TooltipDefinitions = {
     regulation: "Res. BCB 229/2022",
   },
 
+  // ===== SOBERANO ESTRANGEIRO =====
+  ratingSoberanoEstrangeiro: {
+    description:
+      "Rating de crédito do soberano estrangeiro. Determina o FPR: AAA a AA- (0%), A+ a A- (20%), BBB+ a BBB- (50%), BB+ a B- (100%), inferior a B- ou sem rating (150%).",
+    article: "Arts. 27-30",
+    regulation: "Res. BCB 229/2022",
+  },
+
+  multilateralListada: {
+    description:
+      "Organização multilateral listada (BIS, FMI, Banco Mundial, etc.) ou MDE listada. FPR de 0% (sobrepõe rating).",
+    article: "Art. 27",
+    regulation: "Res. BCB 229/2022",
+  },
+
   // ===== OUTRAS EXPOSIÇÕES =====
   outrasExposicoes: {
     description:

@@ -152,6 +152,35 @@ export default function App() {
             </Row>
           </Card>
 
+          {/* Soberano Estrangeiro */}
+          {inputs.contraparte === "soberano_estrangeiro" && (
+            <Card title="Soberano Estrangeiro">
+              <Row>
+                <FieldGroup label="Multilateral listada" tooltip={TOOLTIPS.multilateralListada}>
+                  <Switch
+                    checked={inputs.soberano.multilateralListada}
+                    onChange={(v) => updateNested("soberano", "multilateralListada", v)}
+                  />
+                  <Helper>BIS, FMI, Banco Mundial, etc. (FPR 0%)</Helper>
+                </FieldGroup>
+
+                <FieldGroup label="Rating do soberano" tooltip={TOOLTIPS.ratingSoberanoEstrangeiro}>
+                  <Select
+                    value={inputs.soberano.ratingBucket}
+                    onChange={(v) => updateNested("soberano", "ratingBucket", v)}
+                  >
+                    <option value="AAA_AA-">AAA a AA- (FPR 0%)</option>
+                    <option value="A+_A-">A+ a A- (FPR 20%)</option>
+                    <option value="BBB+_BBB-">BBB+ a BBB- (FPR 50%)</option>
+                    <option value="BB+_B-">BB+ a B- (FPR 100%)</option>
+                    <option value="inferior_B-">Inferior a B- ou sem rating (FPR 150%)</option>
+                  </Select>
+                  <Helper>Multilateral listada sobrepõe rating</Helper>
+                </FieldGroup>
+              </Row>
+            </Card>
+          )}
+
           {/* Descasamento Cambial - Aplicável apenas a Varejo e Imobiliário */}
           {(inputs.contraparte === "pf" || inputs.produto === "credito_imobiliario") && (
             <Card title="Descasamento Cambial" subtitle="Ajuste de FPR por moeda">
