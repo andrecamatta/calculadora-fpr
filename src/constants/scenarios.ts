@@ -222,11 +222,6 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     corporate: { grandeBaixoRisco: false, pme: false, financiamento: "nenhum" },
   }),
 
-  "BNDES (FPR 0%)": (_) => ({
-    produto: "emprestimo",
-    contraparte: "bndes",
-  }),
-
   "Soberano BR": (_) => ({
     produto: "emprestimo",
     contraparte: "soberano_br",

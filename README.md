@@ -20,7 +20,7 @@ Calculadora de Fator de Ponderação de Risco (FPR) conforme Resolução BCB 229
 ### Implementado ✅
 
 - **FPR por classe de ativo/contraparte**
-  - ✅ Soberanos (BR, estrangeiro, BNDES)
+  - ✅ Soberanos (BR, estrangeiro)
   - ✅ Setor Público (Estados, Municípios, DF, PSP, Estatais)
   - ✅ Instituições Financeiras (categorias A/B/C)
   - ✅ Corporate (grande baixo risco com validação receita/rating, PME com validação R$ 300MM, project finance)
@@ -52,7 +52,6 @@ Calculadora de Fator de Ponderação de Risco (FPR) conforme Resolução BCB 229
   - Sanitização (0% - 1250%)
 
 - **Atualizações 2024-2025**
-  - ✅ BNDES tratado como soberano (FPR 0%)
   - ✅ Limite varejo aumentado para R$ 5MM (antes R$ 3MM)
   - ✅ Consignado > 5 anos (FPR 150% vs 300% anterior)
   - ✅ Obra em andamento: contratos ≤2023 (FPR 50%), contratos 2024+ (FPR 150%)
@@ -144,7 +143,6 @@ A aplicação inclui cenários pré-configurados organizados por categoria:
 - Corporate grande baixo risco → 65%
 - PME → 85%
 - IF categoria A ≤90d → 20%
-- BNDES → 0%
 - Soberano BR → 0%
 
 **Novas Exposições:**

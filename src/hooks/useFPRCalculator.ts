@@ -32,7 +32,6 @@ export function useInitialInputs(): FPRInputs {
       soberano: {
         multilateralListada: false,
         ratingBucket: "BBB+_BBB-",
-        isBNDES: false,
       },
 
       ifinfo: {

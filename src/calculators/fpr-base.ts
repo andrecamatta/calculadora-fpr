@@ -174,11 +174,6 @@ function calcularSoberano(
     return { fpr: FPR_ZERO_ENTITIES.soberanoBR, classe: "soberano" };
   }
 
-  if (contraparte === "bndes") {
-    steps.push("BNDES (tratado como soberano) ⇒ FPR 0%");
-    return { fpr: FPR_ZERO_ENTITIES.bndes, classe: "bndes" };
-  }
-
   if (soberano.multilateralListada) {
     steps.push("Organização multilateral/MDE listada ⇒ FPR 0%");
     return { fpr: FPR_ZERO_ENTITIES.multilateralListada, classe: "multilateral" };
@@ -205,6 +200,8 @@ function calcularSoberano(
 
 /**
  * Calcula FPR para setor público (estados, municípios, PSP, estatais)
+ * IMPORTANTE: Res. BCB 229/2022 NÃO prevê diferenciação por rating para entes subnacionais
+ * FPR fixo de 100% para todos os tipos
  */
 function calcularSetorPublico(
   inputs: FPRInputs,
@@ -214,20 +211,20 @@ function calcularSetorPublico(
 
   if (contraparte !== "setor_publico") return null;
 
-  const { tipo, rating } = setorPublico;
+  const { tipo } = setorPublico;
 
-  // Se tiver rating, usar tabela de soberanos
-  if (rating) {
-    const fpr = SOBERANO_FPR[rating];
-    steps.push(
-      `Setor Público (${tipo}) com rating ${rating} ⇒ FPR ${fpr}%`
-    );
-    return { fpr, classe: `setor_publico_${tipo}_rated` };
-  }
-
-  // Sem rating, usar FPR padrão
+  // FPR fixo de 100% para todos os entes subnacionais (sem diferenciação por rating)
   const fpr = SETOR_PUBLICO_FPR.default;
-  steps.push(`Setor Público (${tipo}) sem rating ⇒ FPR ${fpr}%`);
+
+  const tipoNome = {
+    estado: "Estado",
+    municipio: "Município",
+    df: "Distrito Federal",
+    psp: "Prestador de Serviço Público",
+    estatal: "Empresa Estatal"
+  }[tipo] || tipo;
+
+  steps.push(`Setor Público (${tipoNome}) ⇒ FPR fixo 100% (Art. 57-58)`);
   return { fpr, classe: `setor_publico_${tipo}` };
 }
 

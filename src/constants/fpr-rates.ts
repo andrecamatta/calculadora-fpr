@@ -118,7 +118,6 @@ export const FPR_ZERO_ENTITIES = {
   soberanoBR: 0,
   multilateralListada: 0,
   bcb: 0,
-  bndes: 0, // Atualização regulatória - BNDES como soberano
 } as const;
 
 // FPR Setor Público

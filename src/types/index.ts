@@ -18,7 +18,6 @@ export type Produto =
 export type Contraparte =
   | "soberano_br"
   | "soberano_estrangeiro"
-  | "bndes"
   | "if"
   | "corporate"
   | "pf"
@@ -93,7 +92,6 @@ export type ColateralTipo =
 export interface SoberanoInfo {
   multilateralListada: boolean;
   ratingBucket: RatingBucket;
-  isBNDES?: boolean; // Res. BCB - BNDES tratado como soberano
 }
 
 export interface IFInfo {

@@ -143,7 +143,6 @@ export default function App() {
                   <option value="setor_publico">Setor Público</option>
                   <option value="pf">Pessoa Física</option>
                   <option value="soberano_br">Soberano BR/BCB</option>
-                  <option value="bndes">BNDES</option>
                   <option value="soberano_estrangeiro">
                     Soberano estrangeiro
                   </option>
@@ -451,23 +450,7 @@ export default function App() {
                     <option value="psp">Prestador Serviço Público</option>
                     <option value="estatal">Empresa Estatal</option>
                   </Select>
-                </FieldGroup>
-
-                <FieldGroup label="Rating (opcional)" tooltip={TOOLTIPS.ratingSetorPublico}>
-                  <Select
-                    value={inputs.setorPublico.rating ?? ""}
-                    onChange={(v) =>
-                      updateNested("setorPublico", "rating", v || undefined)
-                    }
-                  >
-                    <option value="">Sem rating (FPR 100%)</option>
-                    <option value="AAA_AA-">AAA a AA-</option>
-                    <option value="A+_A-">A+ a A-</option>
-                    <option value="BBB+_BBB-">BBB+ a BBB-</option>
-                    <option value="BB+_B-">BB+ a B-</option>
-                    <option value="inferior_B-">Inferior a B-</option>
-                  </Select>
-                  <Helper>Com rating, aplica FPR soberano</Helper>
+                  <Helper>FPR fixo 100% (sem diferenciação por rating)</Helper>
                 </FieldGroup>
               </Row>
             </Card>

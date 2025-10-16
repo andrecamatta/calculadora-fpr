@@ -24,7 +24,7 @@ Este guia explica as principais situações que resultam em cada valor de FPR (F
 ### Principais situações:
 
 1. **Soberano com rating A+ a A-**
-   - Soberano estrangeiro ou setor público com rating nessa faixa
+   - Soberano estrangeiro com rating nessa faixa
    - Risco soberano moderadamente baixo
 
 2. **IF Categoria A + Prazo ≤ 90 dias**
@@ -206,10 +206,11 @@ Este guia explica as principais situações que resultam em cada valor de FPR (F
    - Exposição total > R$ 5 milhões
    - Não se qualifica como varejo
 
-5. **Setor Público sem rating**
+5. **Setor Público (FPR fixo)**
    - Estados, municípios, Distrito Federal
    - Prestadores de Serviços Públicos (PSP)
    - Empresas Estatais
+   - **Não há diferenciação por rating** conforme Res. BCB 229/2022
 
 6. **Inadimplência com provisão 20-50%**
    - Provisão intermediária
