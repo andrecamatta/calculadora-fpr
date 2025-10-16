@@ -230,15 +230,29 @@ export const TOOLTIPS: TooltipDefinitions = {
   // ===== SOBERANO ESTRANGEIRO =====
   ratingSoberanoEstrangeiro: {
     description:
-      "Rating de crédito do soberano estrangeiro. Determina o FPR: AAA a AA- (0%), A+ a A- (20%), BBB+ a BBB- (50%), BB+ a B- (100%), inferior a B- ou sem rating (150%).",
-    article: "Arts. 27-30",
+      "Rating de crédito do soberano estrangeiro (e seus BCs). Determina o FPR: AA- ou acima (0%), A- a <AA- (20%), BBB- a <A- (50%), B- a <BBB- OU sem rating (100%), inferior a B- (150%). IMPORTANTE: 'sem rating' = 100%, não 150%.",
+    article: "Arts. 28-30",
     regulation: "Res. BCB 229/2022",
   },
 
   multilateralListada: {
     description:
-      "Organização multilateral listada (BIS, FMI, Banco Mundial, etc.) ou MDE listada. FPR de 0% (sobrepõe rating).",
+      "Organização multilateral listada no Art. 27 (BIS, FMI, Banco Mundial, BID, BIRD, etc.) ou MDE listada. FPR fixo de 0% (sobrepõe rating). Se a multilateral NÃO está listada, usar o outro campo.",
     article: "Art. 27",
+    regulation: "Res. BCB 229/2022",
+  },
+
+  multilateralNaoListada: {
+    description:
+      "Organismo multilateral de desenvolvimento NÃO listado no Art. 27. FPR depende de rating externo com tabela DIFERENTE dos soberanos: AA- ou acima (20%), A- a <AA- (30%), BBB- a <A- OU sem rating (50%), B- a <BBB- (100%), <B- (150%).",
+    article: "Arts. 27-30 (multilaterais não listadas)",
+    regulation: "Res. BCB 229/2022",
+  },
+
+  ratingMultilateral: {
+    description:
+      "Rating de crédito da multilateral NÃO listada. Tabela específica: AA- ou acima (20%), A- a <AA- (30%), BBB- a <A- OU sem rating (50%), B- a <BBB- (100%), <B- (150%). DIFERENTE da tabela de soberanos estrangeiros.",
+    article: "Arts. 27-30",
     regulation: "Res. BCB 229/2022",
   },
 

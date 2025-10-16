@@ -3,13 +3,33 @@
  * Centraliza todos os fatores de ponderação de risco
  */
 
-import { RatingBucket } from "../types";
+import { RatingBucket, RatingBucketMultilateral } from "../types";
 
-// FPR Soberanos por rating (Arts. 27-30: BR/BCB, multilaterais, estrangeiros)
+// FPR Soberanos estrangeiros por rating (Arts. 28-30)
+// AA- ou acima: 0%
+// A- a <AA-: 20%
+// BBB- a <A-: 50%
+// B- a <BBB- OU sem rating: 100%
+// <B-: 150%
 export const SOBERANO_FPR: Record<RatingBucket, number> = {
   "AAA_AA-": 0,
   "A+_A-": 20,
   "BBB+_BBB-": 50,
+  "BB+_B-_sem_rating": 100, // B- a <BBB- OU sem rating
+  "inferior_B-": 150, // <B-
+};
+
+// FPR Multilaterais NÃO listadas (não incluídas no Art. 27)
+// Tabela diferente dos soberanos estrangeiros
+// AA- ou acima: 20%
+// A- a <AA-: 30%
+// BBB- a <A- OU sem rating: 50%
+// B- a <BBB-: 100%
+// <B-: 150%
+export const MULTILATERAL_FPR: Record<RatingBucketMultilateral, number> = {
+  "AAA_AA-": 20,
+  "A+_A-": 30,
+  "BBB+_BBB-_sem_rating": 50, // BBB- a <A- OU sem rating
   "BB+_B-": 100,
   "inferior_B-": 150,
 };

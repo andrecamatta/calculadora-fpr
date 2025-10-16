@@ -31,7 +31,9 @@ export function useInitialInputs(): FPRInputs {
 
       soberano: {
         multilateralListada: false,
+        multilateralNaoListada: false,
         ratingBucket: "BBB+_BBB-",
+        ratingBucketMultilateral: undefined,
       },
 
       ifinfo: {

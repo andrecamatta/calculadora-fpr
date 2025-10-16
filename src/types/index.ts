@@ -27,8 +27,15 @@ export type RatingBucket =
   | "AAA_AA-"
   | "A+_A-"
   | "BBB+_BBB-"
-  | "BB+_B-"
-  | "inferior_B-";
+  | "BB+_B-_sem_rating" // B- a <BBB- OU sem rating (soberanos)
+  | "inferior_B-"; // <B- (soberanos)
+
+export type RatingBucketMultilateral =
+  | "AAA_AA-" // 20%
+  | "A+_A-" // 30%
+  | "BBB+_BBB-_sem_rating" // 50% (inclui sem rating)
+  | "BB+_B-" // 100%
+  | "inferior_B-"; // 150%
 
 export type IFCategoria = "A" | "B" | "C";
 
@@ -90,8 +97,10 @@ export type ColateralTipo =
 
 // Interfaces principais
 export interface SoberanoInfo {
-  multilateralListada: boolean;
-  ratingBucket: RatingBucket;
+  multilateralListada: boolean; // Art. 27 - FPR 0%
+  multilateralNaoListada: boolean; // Não listadas - depende de rating
+  ratingBucket: RatingBucket; // Para soberanos estrangeiros
+  ratingBucketMultilateral?: RatingBucketMultilateral; // Para multilaterais não listadas
 }
 
 export interface IFInfo {

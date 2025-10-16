@@ -155,7 +155,7 @@ export default function App() {
           {inputs.contraparte === "soberano_estrangeiro" && (
             <Card title="Soberano Estrangeiro">
               <Row>
-                <FieldGroup label="Multilateral listada" tooltip={TOOLTIPS.multilateralListada}>
+                <FieldGroup label="Multilateral listada (Art. 27)" tooltip={TOOLTIPS.multilateralListada}>
                   <Switch
                     checked={inputs.soberano.multilateralListada}
                     onChange={(v) => updateNested("soberano", "multilateralListada", v)}
@@ -163,20 +163,50 @@ export default function App() {
                   <Helper>BIS, FMI, Banco Mundial, etc. (FPR 0%)</Helper>
                 </FieldGroup>
 
-                <FieldGroup label="Rating do soberano" tooltip={TOOLTIPS.ratingSoberanoEstrangeiro}>
-                  <Select
-                    value={inputs.soberano.ratingBucket}
-                    onChange={(v) => updateNested("soberano", "ratingBucket", v)}
-                  >
-                    <option value="AAA_AA-">AAA a AA- (FPR 0%)</option>
-                    <option value="A+_A-">A+ a A- (FPR 20%)</option>
-                    <option value="BBB+_BBB-">BBB+ a BBB- (FPR 50%)</option>
-                    <option value="BB+_B-">BB+ a B- (FPR 100%)</option>
-                    <option value="inferior_B-">Inferior a B- ou sem rating (FPR 150%)</option>
-                  </Select>
-                  <Helper>Multilateral listada sobrepõe rating</Helper>
+                <FieldGroup label="Multilateral NÃO listada" tooltip={TOOLTIPS.multilateralNaoListada}>
+                  <Switch
+                    checked={inputs.soberano.multilateralNaoListada}
+                    onChange={(v) => updateNested("soberano", "multilateralNaoListada", v)}
+                  />
+                  <Helper>Depende de rating (20%-150%)</Helper>
                 </FieldGroup>
               </Row>
+
+              {/* Rating para soberanos estrangeiros */}
+              {!inputs.soberano.multilateralListada && !inputs.soberano.multilateralNaoListada && (
+                <Row>
+                  <FieldGroup label="Rating do soberano" tooltip={TOOLTIPS.ratingSoberanoEstrangeiro}>
+                    <Select
+                      value={inputs.soberano.ratingBucket}
+                      onChange={(v) => updateNested("soberano", "ratingBucket", v)}
+                    >
+                      <option value="AAA_AA-">AA- ou acima (FPR 0%)</option>
+                      <option value="A+_A-">A- a &lt;AA- (FPR 20%)</option>
+                      <option value="BBB+_BBB-">BBB- a &lt;A- (FPR 50%)</option>
+                      <option value="BB+_B-_sem_rating">B- a &lt;BBB- OU sem rating (FPR 100%)</option>
+                      <option value="inferior_B-">Inferior a B- (FPR 150%)</option>
+                    </Select>
+                  </FieldGroup>
+                </Row>
+              )}
+
+              {/* Rating para multilaterais NÃO listadas */}
+              {inputs.soberano.multilateralNaoListada && (
+                <Row>
+                  <FieldGroup label="Rating da multilateral" tooltip={TOOLTIPS.ratingMultilateral}>
+                    <Select
+                      value={inputs.soberano.ratingBucketMultilateral || "BBB+_BBB-_sem_rating"}
+                      onChange={(v) => updateNested("soberano", "ratingBucketMultilateral", v)}
+                    >
+                      <option value="AAA_AA-">AA- ou acima (FPR 20%)</option>
+                      <option value="A+_A-">A- a &lt;AA- (FPR 30%)</option>
+                      <option value="BBB+_BBB-_sem_rating">BBB- a &lt;A- OU sem rating (FPR 50%)</option>
+                      <option value="BB+_B-">B- a &lt;BBB- (FPR 100%)</option>
+                      <option value="inferior_B-">Inferior a B- (FPR 150%)</option>
+                    </Select>
+                  </FieldGroup>
+                </Row>
+              )}
             </Card>
           )}
 

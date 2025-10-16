@@ -6,6 +6,7 @@
 import { FPRInputs } from "../types";
 import {
   SOBERANO_FPR,
+  MULTILATERAL_FPR,
   IF_FPR,
   CORPORATE_FPR,
   VAREJO_FPR,
@@ -174,23 +175,40 @@ function calcularSoberano(
     return { fpr: FPR_ZERO_ENTITIES.soberanoBR, classe: "soberano" };
   }
 
+  // Multilateral listada (Art. 27): BIS, FMI, Banco Mundial, etc.
   if (soberano.multilateralListada) {
-    steps.push("Organização multilateral/MDE listada ⇒ FPR 0%");
-    return { fpr: FPR_ZERO_ENTITIES.multilateralListada, classe: "multilateral" };
+    steps.push("Organização multilateral/MDE listada (Art. 27) ⇒ FPR 0%");
+    return { fpr: FPR_ZERO_ENTITIES.multilateralListada, classe: "multilateral_listada" };
   }
 
+  // Multilateral NÃO listada: depende de rating
+  if (soberano.multilateralNaoListada) {
+    if (!soberano.ratingBucketMultilateral) {
+      // Sem rating: conservador 50% (default do bucket BBB+_BBB-_sem_rating)
+      steps.push("⚠️ Multilateral não listada sem rating ⇒ FPR conservador 50%");
+      return { fpr: 50, classe: "multilateral_nao_listada_sem_rating" };
+    }
+
+    const fpr = MULTILATERAL_FPR[soberano.ratingBucketMultilateral];
+    steps.push(
+      `Multilateral não listada (rating ${soberano.ratingBucketMultilateral}) ⇒ FPR ${fpr}%`
+    );
+    return { fpr, classe: "multilateral_nao_listada" };
+  }
+
+  // Soberano estrangeiro
   if (contraparte === "soberano_estrangeiro") {
-    // Validação: soberano estrangeiro deve ter rating
     if (!soberano.ratingBucket) {
+      // Sem rating: 100% (bucket BB+_B-_sem_rating)
       steps.push(
-        "⚠️ Soberano estrangeiro sem rating ⇒ FPR conservador 150% (conforme Basel)"
+        "⚠️ Soberano estrangeiro sem rating ⇒ FPR 100% (B- a <BBB- ou sem rating)"
       );
-      return { fpr: 150, classe: "soberano_estrangeiro_sem_rating" };
+      return { fpr: 100, classe: "soberano_estrangeiro_sem_rating" };
     }
 
     const fpr = SOBERANO_FPR[soberano.ratingBucket];
     steps.push(
-      `Soberano estrangeiro (bucket ${soberano.ratingBucket}) ⇒ FPR ${fpr}%`
+      `Soberano estrangeiro (rating ${soberano.ratingBucket}) ⇒ FPR ${fpr}%`
     );
     return { fpr, classe: "soberano_estrangeiro" };
   }
