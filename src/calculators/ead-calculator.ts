@@ -89,21 +89,23 @@ export function calculateEAD(inputs: FPRInputs): EADResult | null {
     `Exposição bruta = Saldo + (CCF × Limite) = ${exposicaoBruta.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
   );
 
-  // Deduz provisão conforme Art. 6º da Res. BCB 229/2022
-  const provisao = inputs.inadimplencia.provisaoValor ?? 0;
+  // Calcula provisão automaticamente: Provisão (R$) = Provisão (%) × Saldo Devedor
+  // Conforme Art. 6º da Res. BCB 229/2022
+  const provisaoPercentual = inputs.inadimplencia.provisaoPercentual;
+  const provisaoValor = (provisaoPercentual / 100) * saldo;
 
-  if (provisao > 0) {
+  if (provisaoValor > 0) {
     steps.push(
-      `Provisão constituída (Art. 6º): ${provisao.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
+      `Provisão (${provisaoPercentual}% × ${saldo.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}) = ${provisaoValor.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
     );
   }
 
   // EAD = max(0, Exposição - Provisão) conforme Art. 6º §1º
-  const ead = Math.max(0, exposicaoBruta - provisao);
+  const ead = Math.max(0, exposicaoBruta - provisaoValor);
 
-  if (provisao > 0) {
+  if (provisaoValor > 0) {
     steps.push(
-      `EAD = max(0, Exposição - Provisão) = max(0, ${exposicaoBruta.toLocaleString("pt-BR", { minimumFractionDigits: 2 })} - ${provisao.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}) = ${ead.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
+      `EAD = max(0, Exposição - Provisão) = max(0, ${exposicaoBruta.toLocaleString("pt-BR", { minimumFractionDigits: 2 })} - ${provisaoValor.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}) = ${ead.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
     );
   } else {
     steps.push(

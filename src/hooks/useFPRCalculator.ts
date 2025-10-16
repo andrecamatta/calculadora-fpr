@@ -108,7 +108,6 @@ export function useInitialInputs(): FPRInputs {
       inadimplencia: {
         emInadimplencia: false,
         provisaoPercentual: 0,
-        provisaoValor: 0,
       },
 
       ead: {

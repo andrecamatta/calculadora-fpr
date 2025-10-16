@@ -305,19 +305,19 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
   "Inadimplência provisão 15% (FPR 150%)": (_) => ({
     produto: "emprestimo",
     contraparte: "corporate",
-    inadimplencia: { emInadimplencia: true, provisaoPercentual: 15, provisaoValor: 0 },
+    inadimplencia: { emInadimplencia: true, provisaoPercentual: 15 },
   }),
 
   "Inadimplência provisão 30% (FPR 100%)": (_) => ({
     produto: "emprestimo",
     contraparte: "corporate",
-    inadimplencia: { emInadimplencia: true, provisaoPercentual: 30, provisaoValor: 0 },
+    inadimplencia: { emInadimplencia: true, provisaoPercentual: 30 },
   }),
 
   "Inadimplência provisão 60% (FPR 50%)": (_) => ({
     produto: "emprestimo",
     contraparte: "corporate",
-    inadimplencia: { emInadimplencia: true, provisaoPercentual: 60, provisaoValor: 0 },
+    inadimplencia: { emInadimplencia: true, provisaoPercentual: 60 },
   }),
 
   // Testes de dedução de provisão (Art. 6º)
@@ -326,31 +326,29 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     contraparte: "corporate",
     inadimplencia: {
       emInadimplencia: true,
-      provisaoPercentual: 30, // FPR = 100%
-      provisaoValor: 300 // R$ 300 deduzidos da exposição
+      provisaoPercentual: 30, // FPR = 100%, Provisão R$ = 30% × 1.000 = 300 (calculado automaticamente)
     },
     ead: {
       saldoDevedor: 1000,
       limiteNaoUtilizado: 0,
       ccfTipo: "outro",
     },
-    // Resultado esperado: EAD = 1000 - 300 = 700, RWA = 700 × 100% = 700
+    // Resultado esperado: Provisão = R$ 300, EAD = 1.000 - 300 = 700, RWA = 700 × 100% = 700
   }),
 
-  "Art. 6º: Provisão > exposição (EAD = 0)": (_) => ({
+  "Art. 6º: Provisão > 100% (EAD = 0)": (_) => ({
     produto: "emprestimo",
     contraparte: "corporate",
     inadimplencia: {
       emInadimplencia: true,
-      provisaoPercentual: 80, // FPR = 50%
-      provisaoValor: 1500 // Provisão maior que exposição
+      provisaoPercentual: 150, // FPR = 50%, Provisão R$ = 150% × 1.000 = 1.500 (calculado automaticamente)
     },
     ead: {
       saldoDevedor: 1000,
       limiteNaoUtilizado: 0,
       ccfTipo: "outro",
     },
-    // Resultado esperado: EAD = max(0, 1000 - 1500) = 0, RWA = 0
+    // Resultado esperado: Provisão = R$ 1.500, EAD = max(0, 1.000 - 1.500) = 0, RWA = 0
   }),
 
   // Setor Público
