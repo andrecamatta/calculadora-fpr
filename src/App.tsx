@@ -272,7 +272,9 @@ export default function App() {
                   />
                   <Helper>Receita ≤ R$ 300MM</Helper>
                 </FieldGroup>
+              </Row>
 
+              <Row>
                 <FieldGroup label="Financiamento especializado" tooltip={TOOLTIPS.financiamentoEspecializado}>
                   <Select
                     value={inputs.corporate.financiamento}
@@ -284,10 +286,8 @@ export default function App() {
                     <option value="project">Project finance</option>
                   </Select>
                 </FieldGroup>
-              </Row>
 
-              {inputs.corporate.financiamento === "project" && (
-                <Row>
+                {inputs.corporate.financiamento === "project" && (
                   <FieldGroup label="Fase do project finance" tooltip={TOOLTIPS.projectFinanceFase}>
                     <Select
                       value={inputs.corporate.projectFinanceFase || "pre_operacional"}
@@ -301,8 +301,8 @@ export default function App() {
                       Operacional: fluxo de caixa positivo, projeções suficientes, passivos decrescentes
                     </Helper>
                   </FieldGroup>
-                </Row>
-              )}
+                )}
+              </Row>
             </Card>
           )}
 
