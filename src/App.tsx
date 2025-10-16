@@ -251,31 +251,6 @@ export default function App() {
             </Card>
           )}
 
-          {/* Corporate */}
-          {inputs.contraparte === "corporate" && (
-            <Card title="Corporate / Empresa Não Financeira">
-              <Row>
-                <FieldGroup label="Grande baixo risco" tooltip={TOOLTIPS.grandeBaixoRisco}>
-                  <Switch
-                    checked={inputs.corporate.grandeBaixoRisco}
-                    onChange={(v) =>
-                      updateNested("corporate", "grandeBaixoRisco", v)
-                    }
-                  />
-                  <Helper>Demonstrações auditadas + ativo/receita + ações em bolsa</Helper>
-                </FieldGroup>
-
-                <FieldGroup label="PME" tooltip={TOOLTIPS.pme}>
-                  <Switch
-                    checked={inputs.corporate.pme}
-                    onChange={(v) => updateNested("corporate", "pme", v)}
-                  />
-                  <Helper>Receita ≤ R$ 300MM</Helper>
-                </FieldGroup>
-              </Row>
-            </Card>
-          )}
-
           {/* Financiamento Especializado */}
           {inputs.contraparte === "corporate" && (
             <Card title="Financiamento Especializado">
@@ -307,6 +282,31 @@ export default function App() {
                     </Helper>
                   </FieldGroup>
                 )}
+              </Row>
+            </Card>
+          )}
+
+          {/* Corporate - só aparece se financiamento = nenhum */}
+          {inputs.contraparte === "corporate" && inputs.corporate.financiamento === "nenhum" && (
+            <Card title="Corporate / Empresa Não Financeira">
+              <Row>
+                <FieldGroup label="Grande baixo risco" tooltip={TOOLTIPS.grandeBaixoRisco}>
+                  <Switch
+                    checked={inputs.corporate.grandeBaixoRisco}
+                    onChange={(v) =>
+                      updateNested("corporate", "grandeBaixoRisco", v)
+                    }
+                  />
+                  <Helper>Demonstrações auditadas + ativo/receita + ações em bolsa</Helper>
+                </FieldGroup>
+
+                <FieldGroup label="PME" tooltip={TOOLTIPS.pme}>
+                  <Switch
+                    checked={inputs.corporate.pme}
+                    onChange={(v) => updateNested("corporate", "pme", v)}
+                  />
+                  <Helper>Receita ≤ R$ 300MM</Helper>
+                </FieldGroup>
               </Row>
             </Card>
           )}
