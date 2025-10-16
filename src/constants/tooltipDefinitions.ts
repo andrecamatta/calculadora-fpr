@@ -20,7 +20,7 @@ export const TOOLTIPS: TooltipDefinitions = {
 
   contraparte: {
     description:
-      "Classificação da contraparte que determina o FPR base: soberano, instituição financeira, corporate, pessoa física, setor público, etc.",
+      "Classificação da contraparte que determina o FPR base: soberano, instituição financeira, corporate, pessoa física, entes subnacionais/estatais, etc.",
     article: "Arts. 27-66 (seção completa de FPRs por contraparte)",
     regulation: "Res. BCB 229/2022",
   },
@@ -219,22 +219,29 @@ export const TOOLTIPS: TooltipDefinitions = {
     regulation: "Res. BCB 229/2022",
   },
 
-  // ===== SETOR PÚBLICO =====
+  // ===== ENTES SUBNACIONAIS / ESTATAIS =====
   tipoSetorPublico: {
     description:
-      "Tipo de entidade do setor público: estado, município, DF, PSP (prestador de serviço público) ou estatal.",
-    article: "Art. 29",
+      "Entes subnacionais (estados, municípios, DF), prestadores de serviço público (PSP) e empresas estatais. Todos com FPR fixo de 100%.",
+    article: "Arts. 57-58",
     regulation: "Res. BCB 229/2022",
   },
 
   ratingSetorPublico: {
     description:
-      "Rating da entidade pública. Se tiver rating, usa tabela de soberanos. Sem rating, FPR de 100%.",
-    article: "Art. 29",
+      "[DESCONTINUADO] Não há diferenciação por rating para entes subnacionais na Res. BCB 229/2022. FPR fixo de 100%.",
+    article: "Arts. 57-58",
     regulation: "Res. BCB 229/2022",
   },
 
   // ===== SOBERANO ESTRANGEIRO =====
+  tipoSoberano: {
+    description:
+      "Classificação mutuamente excludente: (1) Soberano estrangeiro regular, (2) Multilateral listada no Art. 27 (BIS, FMI, Banco Mundial - FPR 0%), ou (3) Multilateral NÃO listada (FPR depende de rating).",
+    article: "Arts. 27-30",
+    regulation: "Res. BCB 229/2022",
+  },
+
   ratingSoberanoEstrangeiro: {
     description:
       "Rating de crédito do soberano estrangeiro (e seus BCs). Determina o FPR: AA- ou acima (0%), A- a <AA- (20%), BBB- a <A- (50%), B- a <BBB- OU sem rating (100%), inferior a B- (150%). IMPORTANTE: 'sem rating' = 100%, não 150%.",
@@ -244,14 +251,14 @@ export const TOOLTIPS: TooltipDefinitions = {
 
   multilateralListada: {
     description:
-      "Organização multilateral listada no Art. 27 (BIS, FMI, Banco Mundial, BID, BIRD, etc.) ou MDE listada. FPR fixo de 0% (sobrepõe rating). Se a multilateral NÃO está listada, usar o outro campo.",
+      "[DESCONTINUADO - usar campo 'Tipo de entidade'] Organização multilateral listada no Art. 27 (BIS, FMI, Banco Mundial, BID, BIRD, etc.) ou MDE listada. FPR fixo de 0%.",
     article: "Art. 27",
     regulation: "Res. BCB 229/2022",
   },
 
   multilateralNaoListada: {
     description:
-      "Organismo multilateral de desenvolvimento NÃO listado no Art. 27. FPR depende de rating externo com tabela DIFERENTE dos soberanos: AA- ou acima (20%), A- a <AA- (30%), BBB- a <A- OU sem rating (50%), B- a <BBB- (100%), <B- (150%).",
+      "[DESCONTINUADO - usar campo 'Tipo de entidade'] Organismo multilateral de desenvolvimento NÃO listado no Art. 27. FPR depende de rating externo.",
     article: "Arts. 27-30 (multilaterais não listadas)",
     regulation: "Res. BCB 229/2022",
   },

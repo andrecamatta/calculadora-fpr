@@ -140,7 +140,7 @@ export default function App() {
                 >
                   <option value="corporate">Empresa não financeira</option>
                   <option value="if">Instituição Financeira</option>
-                  <option value="setor_publico">Setor Público</option>
+                  <option value="setor_publico">Entes Subnacionais / Estatais (FPR 100%)</option>
                   <option value="pf">Pessoa Física</option>
                   <option value="soberano_br">Soberano BR/BCB</option>
                   <option value="soberano_estrangeiro">
@@ -155,25 +155,23 @@ export default function App() {
           {inputs.contraparte === "soberano_estrangeiro" && (
             <Card title="Soberano Estrangeiro">
               <Row>
-                <FieldGroup label="Multilateral listada (Art. 27)" tooltip={TOOLTIPS.multilateralListada}>
-                  <Switch
-                    checked={inputs.soberano.multilateralListada}
-                    onChange={(v) => updateNested("soberano", "multilateralListada", v)}
-                  />
-                  <Helper>BIS, FMI, Banco Mundial, etc. (FPR 0%)</Helper>
-                </FieldGroup>
-
-                <FieldGroup label="Multilateral NÃO listada" tooltip={TOOLTIPS.multilateralNaoListada}>
-                  <Switch
-                    checked={inputs.soberano.multilateralNaoListada}
-                    onChange={(v) => updateNested("soberano", "multilateralNaoListada", v)}
-                  />
-                  <Helper>Depende de rating (20%-150%)</Helper>
+                <FieldGroup label="Tipo de entidade" tooltip={TOOLTIPS.tipoSoberano}>
+                  <Select
+                    value={inputs.soberano.tipoSoberano}
+                    onChange={(v: any) => updateNested("soberano", "tipoSoberano", v)}
+                  >
+                    <option value="soberano_regular">Soberano estrangeiro</option>
+                    <option value="multilateral_listada">Multilateral listada - Art. 27 (FPR 0%)</option>
+                    <option value="multilateral_nao_listada">Multilateral NÃO listada</option>
+                  </Select>
+                  <Helper>
+                    Multilaterais listadas: BIS, FMI, Banco Mundial, etc.
+                  </Helper>
                 </FieldGroup>
               </Row>
 
-              {/* Rating para soberanos estrangeiros */}
-              {!inputs.soberano.multilateralListada && !inputs.soberano.multilateralNaoListada && (
+              {/* Rating para soberanos estrangeiros regulares */}
+              {inputs.soberano.tipoSoberano === "soberano_regular" && (
                 <Row>
                   <FieldGroup label="Rating do soberano" tooltip={TOOLTIPS.ratingSoberanoEstrangeiro}>
                     <Select
@@ -191,7 +189,7 @@ export default function App() {
               )}
 
               {/* Rating para multilaterais NÃO listadas */}
-              {inputs.soberano.multilateralNaoListada && (
+              {inputs.soberano.tipoSoberano === "multilateral_nao_listada" && (
                 <Row>
                   <FieldGroup label="Rating da multilateral" tooltip={TOOLTIPS.ratingMultilateral}>
                     <Select
@@ -488,26 +486,7 @@ export default function App() {
             </Card>
           )}
 
-          {/* Setor Público */}
-          {inputs.contraparte === "setor_publico" && (
-            <Card title="Setor Público">
-              <Row>
-                <FieldGroup label="Tipo" tooltip={TOOLTIPS.tipoSetorPublico}>
-                  <Select
-                    value={inputs.setorPublico.tipo}
-                    onChange={(v) => updateNested("setorPublico", "tipo", v)}
-                  >
-                    <option value="estado">Estado</option>
-                    <option value="municipio">Município</option>
-                    <option value="df">Distrito Federal</option>
-                    <option value="psp">Prestador Serviço Público</option>
-                    <option value="estatal">Empresa Estatal</option>
-                  </Select>
-                  <Helper>FPR fixo 100%</Helper>
-                </FieldGroup>
-              </Row>
-            </Card>
-          )}
+          {/* Setor Público: FPR fixo 100% sem inputs adicionais (Art. 57-58) */}
 
           {/* Outras Exposições */}
           {inputs.produto === "outro" && (

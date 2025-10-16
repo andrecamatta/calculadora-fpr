@@ -21,7 +21,7 @@ Calculadora de Fator de Ponderação de Risco (FPR) conforme Resolução BCB 229
 
 - **FPR por classe de ativo/contraparte**
   - ✅ Soberanos (BR, estrangeiro)
-  - ✅ Setor Público (Estados, Municípios, DF, PSP, Estatais)
+  - ✅ Entes Subnacionais / Estatais (Estados, Municípios, DF, PSP, Estatais - FPR fixo 100%)
   - ✅ Instituições Financeiras (categorias A/B/C)
   - ✅ Corporate (grande baixo risco com validação receita/rating, PME com validação R$ 300MM, project finance)
   - ✅ Varejo PF (elegível R$ 5MM, transactor, consignado >5 anos)
@@ -156,9 +156,8 @@ A aplicação inclui cenários pré-configurados organizados por categoria:
 - Provisão 30% → 100%
 - Provisão 60% → 50%
 
-**Setor Público:**
-- Estado sem rating → 100%
-- Município com rating A+ → 20%
+**Entes Subnacionais / Estatais:**
+- Estados, Municípios, DF, PSP, Estatais → FPR fixo 100% (sem diferenciação por rating)
 
 **Imobiliário:**
 - Obra andamento contrato 2023 → 50%

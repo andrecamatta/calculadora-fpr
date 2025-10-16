@@ -30,8 +30,7 @@ export function useInitialInputs(): FPRInputs {
       hedge90: false,
 
       soberano: {
-        multilateralListada: false,
-        multilateralNaoListada: false,
+        tipoSoberano: "soberano_regular",
         ratingBucket: "BBB+_BBB-",
         ratingBucketMultilateral: undefined,
       },

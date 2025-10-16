@@ -209,11 +209,11 @@ Este guia explica as principais situações que resultam em cada valor de FPR (F
    - Exposição total > R$ 5 milhões
    - Não se qualifica como varejo
 
-5. **Setor Público (FPR fixo)**
+5. **Entes Subnacionais / Estatais (FPR fixo 100%)**
    - Estados, municípios, Distrito Federal
    - Prestadores de Serviços Públicos (PSP)
    - Empresas Estatais
-   - **Não há diferenciação por rating** conforme Res. BCB 229/2022
+   - **FPR fixo de 100% sem diferenciação por rating** (Arts. 57-58)
 
 6. **Inadimplência com provisão 20-50%**
    - Provisão intermediária
@@ -318,7 +318,7 @@ A calculadora aplica uma cascata de regras seguindo esta ordem (do maior para me
 2. **Outras Exposições** - Caixa, ouro, ações (Art. 66)
 3. **Especiais** - Subordinado, equity, crédito tributário (Arts. 59-62)
 4. **Soberanos** - BR/BCB, multilaterais, estrangeiros (Arts. 27-30)
-5. **Setor Público** - Estados, municípios, PSP (Arts. 57-58)
+5. **Entes Subnacionais / Estatais** - Estados, municípios, DF, PSP, estatais (Arts. 57-58, FPR 100%)
 6. **Instituições Financeiras** - IF categorias A, B, C (Arts. 31-36)
 7. **Imobiliário** - Residencial e não residencial (Arts. 48-54)
 8. **Varejo** - Pessoa física (Arts. 43-47)

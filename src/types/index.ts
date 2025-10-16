@@ -101,10 +101,11 @@ export type ColateralTipo =
   | "outro";
 
 // Interfaces principais
+export type TipoSoberano = "soberano_regular" | "multilateral_listada" | "multilateral_nao_listada";
+
 export interface SoberanoInfo {
-  multilateralListada: boolean; // Art. 27 - FPR 0%
-  multilateralNaoListada: boolean; // Não listadas - depende de rating
-  ratingBucket: RatingBucket; // Para soberanos estrangeiros
+  tipoSoberano: TipoSoberano; // Tipo mutuamente excludente
+  ratingBucket: RatingBucket; // Para soberanos estrangeiros regulares
   ratingBucketMultilateral?: RatingBucketMultilateral; // Para multilaterais não listadas
 }
 

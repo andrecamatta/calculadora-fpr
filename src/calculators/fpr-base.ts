@@ -177,13 +177,13 @@ function calcularSoberano(
   }
 
   // Multilateral listada (Art. 27): BIS, FMI, Banco Mundial, etc.
-  if (soberano.multilateralListada) {
+  if (soberano.tipoSoberano === "multilateral_listada") {
     steps.push("Organização multilateral/MDE listada (Art. 27) ⇒ FPR 0%");
     return { fpr: FPR_ZERO_ENTITIES.multilateralListada, classe: "multilateral_listada" };
   }
 
   // Multilateral NÃO listada: depende de rating
-  if (soberano.multilateralNaoListada) {
+  if (soberano.tipoSoberano === "multilateral_nao_listada") {
     if (!soberano.ratingBucketMultilateral) {
       // Sem rating: conservador 50% (default do bucket BBB+_BBB-_sem_rating)
       steps.push("⚠️ Multilateral não listada sem rating ⇒ FPR conservador 50%");
@@ -197,7 +197,7 @@ function calcularSoberano(
     return { fpr, classe: "multilateral_nao_listada" };
   }
 
-  // Soberano estrangeiro
+  // Soberano estrangeiro (soberano_regular)
   if (contraparte === "soberano_estrangeiro") {
     if (!soberano.ratingBucket) {
       // Sem rating: 100% (bucket BB+_B-_sem_rating)
