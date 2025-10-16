@@ -273,9 +273,14 @@ export default function App() {
                   <Helper>Receita ≤ R$ 300MM</Helper>
                 </FieldGroup>
               </Row>
+            </Card>
+          )}
 
+          {/* Financiamento Especializado */}
+          {inputs.contraparte === "corporate" && (
+            <Card title="Financiamento Especializado">
               <Row>
-                <FieldGroup label="Financiamento especializado" tooltip={TOOLTIPS.financiamentoEspecializado}>
+                <FieldGroup label="Tipo de financiamento" tooltip={TOOLTIPS.financiamentoEspecializado}>
                   <Select
                     value={inputs.corporate.financiamento}
                     onChange={(v) => updateNested("corporate", "financiamento", v)}
@@ -498,7 +503,7 @@ export default function App() {
                     <option value="psp">Prestador Serviço Público</option>
                     <option value="estatal">Empresa Estatal</option>
                   </Select>
-                  <Helper>FPR fixo 100% (sem diferenciação por rating)</Helper>
+                  <Helper>FPR fixo 100%</Helper>
                 </FieldGroup>
               </Row>
             </Card>
