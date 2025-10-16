@@ -183,7 +183,8 @@ export interface OutrasExposicoesInfo {
 
 export interface InadimplenciaInfo {
   emInadimplencia: boolean;
-  provisaoPercentual: number; // % de provisão
+  provisaoPercentual: number; // % de provisão (determina FPR conforme Art. 64)
+  provisaoValor?: number; // Valor absoluto da provisão em R$ (deduzido da exposição conforme Art. 6º)
 }
 
 export interface PisosInfo {

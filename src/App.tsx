@@ -664,19 +664,35 @@ export default function App() {
               </FieldGroup>
 
               {inputs.inadimplencia.emInadimplencia && (
-                <FieldGroup label="Provisão (%)" tooltip={TOOLTIPS.provisao}>
-                  <Input
-                    type="number"
-                    value={inputs.inadimplencia.provisaoPercentual}
-                    onChange={(v) =>
-                      updateNested("inadimplencia", "provisaoPercentual", Number(v))
-                    }
-                    placeholder="0-100"
-                  />
-                  <Helper>
-                    &lt;20%: FPR 150% | 20-50%: FPR 100% | ≥50%: FPR 50%
-                  </Helper>
-                </FieldGroup>
+                <>
+                  <FieldGroup label="Provisão (%)" tooltip={TOOLTIPS.provisaoPercentual}>
+                    <Input
+                      type="number"
+                      value={inputs.inadimplencia.provisaoPercentual}
+                      onChange={(v) =>
+                        updateNested("inadimplencia", "provisaoPercentual", Number(v))
+                      }
+                      placeholder="0-100"
+                    />
+                    <Helper>
+                      &lt;20%: FPR 150% | 20-50%: FPR 100% | ≥50%: FPR 50%
+                    </Helper>
+                  </FieldGroup>
+
+                  <FieldGroup label="Provisão (R$)" tooltip={TOOLTIPS.provisaoValor}>
+                    <Input
+                      type="number"
+                      value={inputs.inadimplencia.provisaoValor ?? 0}
+                      onChange={(v) =>
+                        updateNested("inadimplencia", "provisaoValor", Number(v))
+                      }
+                      placeholder="0.00"
+                    />
+                    <Helper>
+                      Valor deduzido da exposição (Art. 6º)
+                    </Helper>
+                  </FieldGroup>
+                </>
               )}
             </Row>
           </Accordion>

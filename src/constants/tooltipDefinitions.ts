@@ -54,10 +54,17 @@ export const TOOLTIPS: TooltipDefinitions = {
     regulation: "Res. BCB 229/2022",
   },
 
-  provisao: {
+  provisaoPercentual: {
     description:
-      "Percentual de provisão constituída sobre a exposição. Determina o FPR: <20%=150%, 20-50%=100%, ≥50%=50%.",
+      "Percentual de provisão constituída sobre a exposição. Determina o FPR para ativos problemáticos: <20%=150%, 20-50%=100%, ≥50%=50%.",
     article: "Art. 64",
+    regulation: "Res. BCB 229/2022",
+  },
+
+  provisaoValor: {
+    description:
+      "Valor absoluto da provisão constituída em R$. Este valor é deduzido da exposição antes de calcular o RWA_CPAD, conforme Art. 6º: 'Para a apuração do valor da exposição, devem ser deduzidos os ajustes relativos a provisões'. A exposição líquida não pode ser negativa (§1º).",
+    article: "Art. 6º",
     regulation: "Res. BCB 229/2022",
   },
 

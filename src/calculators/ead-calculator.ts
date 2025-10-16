@@ -82,12 +82,34 @@ export function calculateEAD(inputs: FPRInputs): EADResult | null {
     `CCF aplicado ao limite: ${ccfAplicado.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
   );
 
-  // Fórmula: EAD = Saldo + (CCF × Limite)
-  const ead = saldo + ccfAplicado;
+  // Fórmula: EAD = Saldo + (CCF × Limite) - Provisão (Art. 6º Res. BCB 229/2022)
+  let exposicaoBruta = saldo + ccfAplicado;
 
   steps.push(
-    `EAD = Saldo + (CCF × Limite) = ${ead.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
+    `Exposição bruta = Saldo + (CCF × Limite) = ${exposicaoBruta.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
   );
+
+  // Deduz provisão conforme Art. 6º da Res. BCB 229/2022
+  const provisao = inputs.inadimplencia.provisaoValor ?? 0;
+
+  if (provisao > 0) {
+    steps.push(
+      `Provisão constituída (Art. 6º): ${provisao.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
+    );
+  }
+
+  // EAD = max(0, Exposição - Provisão) conforme Art. 6º §1º
+  const ead = Math.max(0, exposicaoBruta - provisao);
+
+  if (provisao > 0) {
+    steps.push(
+      `EAD = max(0, Exposição - Provisão) = max(0, ${exposicaoBruta.toLocaleString("pt-BR", { minimumFractionDigits: 2 })} - ${provisao.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}) = ${ead.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
+    );
+  } else {
+    steps.push(
+      `EAD = ${ead.toLocaleString("pt-BR", { minimumFractionDigits: 2 })} (sem provisão dedutível)`
+    );
+  }
 
   return {
     ead,
