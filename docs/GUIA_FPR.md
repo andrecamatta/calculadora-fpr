@@ -126,15 +126,18 @@ Este guia explica as principais situações que resultam em cada valor de FPR (F
 
 **Corporate Grande de Baixo Risco**
 
-**Requisitos simultâneos:**
-- Contraparte: Empresa não financeira
-- Receita anual ≥ R$ 15 bilhões
-- Rating ≥ BB-
-- **SEM** financiamento especializado (se houver, vira 100% ou 130%)
+**Critérios objetivos (Art. 37, atualizado pela Res. BCB 323/2023):**
+1. Demonstrações financeiras auditadas por auditor independente (CVM ou equivalente)
+2. **Porte:** Ativos totais > R$ 240 MM **OU** receita bruta anual > R$ 300 MM
+3. Não ser ativo problemático (Res. 4.557/2017 e Res. BCB 265/2022)
+4. Entidade ou controladora estrangeira com ações negociadas em bolsa
+5. **SEM** financiamento especializado (se houver, vira 100% ou 130%)
 
-**⚠️ Importante**: Financiamento especializado (objeto, commodities, project finance) TEM PRIORIDADE e sobrepõe esta classificação.
+**⚠️ Observações importantes:**
+- Rating externo **NÃO é requisito de elegibilidade**
+- Financiamento especializado (objeto, commodities, project finance) TEM PRIORIDADE e sobrepõe esta classificação
 
-**Base regulatória**: Arts. 37-38
+**Base regulatória**: Art. 37 (Res. BCB 229/2022, atualizado pela Res. BCB 323/2023)
 
 ---
 

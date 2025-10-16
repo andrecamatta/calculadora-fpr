@@ -466,9 +466,12 @@ function calcularCorporate(
   // 2º) Se NÃO for financiamento especializado,
   //     avaliar características da CONTRAPARTE
 
-  // Grande baixo risco: receita ≥ R$ 15bi + rating ≥ BB-
+  // Grande baixo risco (Art. 37, atualizado pela Res. BCB 323/2023):
+  // Critérios objetivos: (1) demonstrações auditadas, (2) ativos > R$ 240MM OU receita > R$ 300MM,
+  // (3) não ser ativo problemático, (4) ações em bolsa
+  // Rating NÃO é requisito de elegibilidade
   if (corporate.grandeBaixoRisco) {
-    steps.push("Corporate grande de baixo risco ⇒ FPR 65%");
+    steps.push("Corporate grande de baixo risco (Art. 37) ⇒ FPR 65%");
     return { fpr: CORPORATE_FPR.grandeBaixoRisco, classe: "corp_grande_baixo_risco" };
   }
 

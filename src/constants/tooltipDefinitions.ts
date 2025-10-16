@@ -64,8 +64,8 @@ export const TOOLTIPS: TooltipDefinitions = {
   // ===== CORPORATE =====
   grandeBaixoRisco: {
     description:
-      "Empresas com receita ≥ R$ 15 bilhões e rating ≥ BB-. FPR reduzido para 65%.",
-    article: "Art. 37",
+      "Empresas não financeiras de grande porte com baixo risco. Critérios objetivos: (1) demonstrações financeiras auditadas por auditor independente registrado na CVM, (2) ativos totais > R$ 240 MM OU receita bruta anual > R$ 300 MM, (3) não ser ativo problemático (Res. 4.557/2017), (4) entidade ou controladora com ações negociadas em bolsa. FPR reduzido para 65%. Rating externo NÃO é requisito de elegibilidade.",
+    article: "Art. 37 (atualizado pela Res. BCB 323/2023)",
     regulation: "Res. BCB 229/2022",
   },
 

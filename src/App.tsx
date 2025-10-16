@@ -232,7 +232,7 @@ export default function App() {
                       updateNested("corporate", "grandeBaixoRisco", v)
                     }
                   />
-                  <Helper>Receita ≥ R$ 15bi + rating ≥ BB-</Helper>
+                  <Helper>Demonstrações auditadas + ativo/receita + ações em bolsa</Helper>
                 </FieldGroup>
 
                 <FieldGroup label="PME" tooltip={TOOLTIPS.pme}>
