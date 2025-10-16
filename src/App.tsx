@@ -285,6 +285,24 @@ export default function App() {
                   </Select>
                 </FieldGroup>
               </Row>
+
+              {inputs.corporate.financiamento === "project" && (
+                <Row>
+                  <FieldGroup label="Fase do project finance" tooltip={TOOLTIPS.projectFinanceFase}>
+                    <Select
+                      value={inputs.corporate.projectFinanceFase || "pre_operacional"}
+                      onChange={(v) => updateNested("corporate", "projectFinanceFase", v)}
+                    >
+                      <option value="pre_operacional">Pré-operacional (greenfield) - FPR 130%</option>
+                      <option value="operacional">Operacional - FPR 100%</option>
+                      <option value="operacional_alta_qualidade">Operacional alta qualidade - FPR 80%</option>
+                    </Select>
+                    <Helper>
+                      Operacional: fluxo de caixa positivo, projeções suficientes, passivos decrescentes
+                    </Helper>
+                  </FieldGroup>
+                </Row>
+              )}
             </Card>
           )}
 

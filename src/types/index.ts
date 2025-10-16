@@ -45,6 +45,11 @@ export type FinanciamentoEspecializado =
   | "commodities"
   | "project";
 
+export type ProjectFinanceFase =
+  | "pre_operacional" // Greenfield/construção - FPR 130%
+  | "operacional" // Fase operacional - FPR 100%
+  | "operacional_alta_qualidade"; // Alta qualidade - FPR 80%
+
 export type TipoImovel = "residencial" | "nao_residencial";
 
 export type FundosAbordagem = "sem-informacao" | "look-through" | "regulamento" | "mandato";
@@ -116,6 +121,7 @@ export interface CorporateInfo {
   grandeBaixoRisco: boolean;
   pme: boolean;
   financiamento: FinanciamentoEspecializado;
+  projectFinanceFase?: ProjectFinanceFase; // Fase do project finance (quando aplicável)
   receitaAnual?: number; // Para validar PME (≤ R$ 300MM)
   rating?: RatingBucket; // Para validar grande baixo risco
 }

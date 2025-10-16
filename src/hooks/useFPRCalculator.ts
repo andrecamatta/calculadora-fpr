@@ -49,6 +49,7 @@ export function useInitialInputs(): FPRInputs {
         grandeBaixoRisco: false,
         pme: false,
         financiamento: "nenhum",
+        projectFinanceFase: "pre_operacional",
         receitaAnual: undefined,
         rating: undefined,
       },

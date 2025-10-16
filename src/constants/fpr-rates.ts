@@ -61,7 +61,13 @@ export const CORPORATE_FPR = {
   default: 100,
   financiamentoObjeto: 100,
   financiamentoCommodities: 100,
-  projectFinance: 130,
+} as const;
+
+// FPR Project Finance - Fases (Art. 42)
+export const PROJECT_FINANCE_FPR = {
+  pre_operacional: 130, // Greenfield/construção
+  operacional: 100, // Fluxo de caixa positivo, projeções suficientes, passivos decrescentes
+  operacional_alta_qualidade: 80, // + Capacidade de pagamento adequada, receitas contratuais, contrapartes FPR ≤ 80%, garantias, step-in rights
 } as const;
 
 // FPR Varejo (Art. 43-47) - Atualizado Res. 229

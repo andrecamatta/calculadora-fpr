@@ -78,8 +78,15 @@ export const TOOLTIPS: TooltipDefinitions = {
 
   financiamentoEspecializado: {
     description:
-      "Financiamento de objeto específico, commodities ou project finance. FPRs: objeto/commodities=100%, project=130%.",
+      "Financiamento de objeto específico, commodities ou project finance. FPRs: objeto/commodities=100%, project finance varia conforme fase (130%/100%/80%).",
     article: "Arts. 40-42",
+    regulation: "Res. BCB 229/2022",
+  },
+
+  projectFinanceFase: {
+    description:
+      "Fase do project finance determina o FPR: (1) Pré-operacional/greenfield: 130%, (2) Operacional: 100% (requer fluxo de caixa positivo, projeções financeiras suficientes, passivos de longo prazo decrescentes), (3) Operacional alta qualidade: 80% (operacional + capacidade de pagamento adequada + receitas contratuais definidas + contrapartes com FPR ≤ 80% + garantias + step-in rights).",
+    article: "Art. 42",
     regulation: "Res. BCB 229/2022",
   },
 

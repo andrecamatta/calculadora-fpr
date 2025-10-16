@@ -9,6 +9,7 @@ import {
   MULTILATERAL_FPR,
   IF_FPR,
   CORPORATE_FPR,
+  PROJECT_FINANCE_FPR,
   VAREJO_FPR,
   IMOB_RES_SEM_DEP,
   IMOB_RES_COM_DEP,
@@ -469,8 +470,15 @@ function calcularCorporate(
   // 1º) Financiamentos Especializados TÊM PRIORIDADE
   //     (estrutura da operação define o risco)
   if (corporate.financiamento === "project") {
-    steps.push("Project finance ⇒ FPR 130%");
-    return { fpr: CORPORATE_FPR.projectFinance, classe: "corp_project" };
+    const fase = corporate.projectFinanceFase || "pre_operacional";
+    const fpr = PROJECT_FINANCE_FPR[fase];
+    const faseLabel = fase === "pre_operacional"
+      ? "Pré-operacional (greenfield)"
+      : fase === "operacional"
+      ? "Operacional"
+      : "Operacional alta qualidade";
+    steps.push(`Project finance (${faseLabel}) ⇒ FPR ${fpr}%`);
+    return { fpr, classe: `corp_project_${fase}` };
   }
 
   if (
