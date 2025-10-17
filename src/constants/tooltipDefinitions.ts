@@ -310,14 +310,14 @@ export const TOOLTIPS: TooltipDefinitions = {
 
   limiteNaoUtilizado: {
     description:
-      "Valor do limite de crédito ainda não utilizado pela contraparte. Componente off-balance convertido via CCF.",
+      "Valor do limite de crédito ainda não utilizado pela contraparte. Componente off-balance convertido via FCC.",
     article: "Arts. 13-14",
     regulation: "Circular BCB 3.809/2016",
   },
 
-  tipoCCF: {
+  tipoFCC: {
     description:
-      "Fator de Conversão de Crédito que converte limite não utilizado em EAD. Varia por tipo de operação: irrevogável (50%), revogável (10%), garantia (100%), comércio exterior (20%).",
+      "Fator de Conversão em Crédito (FCC) que converte limite não utilizado em EAD. Varia por tipo de operação: irrevogável (50%), revogável (10%), garantia (100%), comércio exterior (20%).",
     article: "Arts. 13-17",
     regulation: "Circular BCB 3.809/2016",
   },

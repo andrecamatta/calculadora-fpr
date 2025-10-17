@@ -259,7 +259,7 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     ead: {
       saldoDevedor: 10000,
       limiteNaoUtilizado: 5000,
-      ccfTipo: "linha_revogavel",
+      fccTipo: "linha_revogavel",
     },
   }),
 
@@ -331,7 +331,7 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     ead: {
       saldoDevedor: 1000,
       limiteNaoUtilizado: 0,
-      ccfTipo: "outro",
+      fccTipo: "outro",
     },
     // Resultado esperado: Provisão = R$ 300, EAD = 1.000 - 300 = 700, RWA = 700 × 100% = 700
   }),
@@ -346,7 +346,7 @@ export const SCENARIOS: Record<string, ScenarioLoader> = {
     ead: {
       saldoDevedor: 1000,
       limiteNaoUtilizado: 0,
-      ccfTipo: "outro",
+      fccTipo: "outro",
     },
     // Resultado esperado: Provisão = R$ 1.500, EAD = max(0, 1.000 - 1.500) = 0, RWA = 0
   }),

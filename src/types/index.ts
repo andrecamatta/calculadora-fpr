@@ -66,15 +66,15 @@ export type CreditoTributarioFPR = "nao" | "100" | "600" | "1250";
 
 export type SegmentoPrudencial = "S1" | "S2" | "S3" | "S4" | "S5";
 
-export type CCFTipo =
+export type FCCTipo =
   | "linha_irrevogavel"
   | "linha_revogavel"
   | "garantia_prestada"
   | "comercio_exterior"
   | "outro";
 
-// CCF Detalhado (granularidade adicional)
-export type CCFDetalhadoTipo =
+// FCC Detalhado (granularidade adicional)
+export type FCCDetalhadoTipo =
   // Compromissos de crédito
   | "compromisso_irrevogavel_ate1ano"
   | "compromisso_irrevogavel_mais1ano"
@@ -194,9 +194,9 @@ export interface PisosInfo {
 export interface EADInfo {
   saldoDevedor: number;
   limiteNaoUtilizado: number;
-  ccfTipo: CCFTipo;
-  ccfDetalhadoTipo?: CCFDetalhadoTipo; // Granularidade adicional
-  ccfCustom?: number; // Override manual
+  fccTipo: FCCTipo;
+  fccDetalhadoTipo?: FCCDetalhadoTipo; // Granularidade adicional
+  fccCustom?: number; // Override manual
 }
 
 export interface FPRInputs {
@@ -238,6 +238,6 @@ export interface HaircutResult {
   valorAjustado: number;
 }
 
-export interface CCFFactors {
+export interface FCCFactors {
   [key: string]: number;
 }

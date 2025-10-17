@@ -74,45 +74,83 @@ export default function App() {
       <div className="grid lg:grid-cols-3 gap-4">
         {/* Coluna 1 e 2: Formulários */}
         <div className="lg:col-span-2 grid gap-6 auto-rows-min">
-          {/* EAD (Exposure at Default) - Primeiro: definir valor da exposição */}
-          <Card title="EAD (Exposure at Default)" subtitle="Valor da exposição ao risco de crédito">
-            <Row>
-              <FieldGroup label="Saldo devedor" tooltip={TOOLTIPS.saldoDevedor}>
-                <Input
-                  type="number"
-                  value={inputs.ead?.saldoDevedor ?? 0}
-                  onChange={(v) =>
-                    updateNested("ead", "saldoDevedor", Number(v))
-                  }
-                  placeholder="0,00"
-                />
-              </FieldGroup>
+          {/* EAD contextual por produto */}
+          {inputs.produto === 'derivativo' ? (
+            <Card title="EAD - Derivativos (SA-CCR)">
+              <Helper>
+                Derivativos usam <strong>SA-CCR</strong> (Standardised Approach - Counterparty Credit Risk) conforme Circular BCB 3.809/2016.
+                EAD calculado via: <em>Valor de Reposição + Ganho Potencial Futuro</em>.
+                Não utiliza FCC tradicional.
+              </Helper>
+            </Card>
+          ) : inputs.produto === 'fundo' ? (
+            <Card title="EAD - Fundos">
+              <Helper>
+                Para fundos, <strong>EAD = Valor da cota × Quantidade</strong>.
+                FPR é aplicado conforme abordagem escolhida (look-through, mandato ou conservadora).
+                Não utiliza FCC tradicional.
+              </Helper>
+            </Card>
+          ) : (
+            <Card title="EAD (Exposure at Default)" subtitle="Valor da exposição ao risco de crédito">
+              <Row>
+                <FieldGroup label="Saldo devedor" tooltip={TOOLTIPS.saldoDevedor}>
+                  <Input
+                    type="number"
+                    value={inputs.ead?.saldoDevedor ?? 0}
+                    onChange={(v) =>
+                      updateNested("ead", "saldoDevedor", Number(v))
+                    }
+                    placeholder="0,00"
+                  />
+                  {inputs.produto === 'emprestimo' && (
+                    <Helper>Valor total desembolsado (100% da exposição)</Helper>
+                  )}
+                </FieldGroup>
 
-              <FieldGroup label="Limite não utilizado" tooltip={TOOLTIPS.limiteNaoUtilizado}>
-                <Input
-                  type="number"
-                  value={inputs.ead?.limiteNaoUtilizado ?? 0}
-                  onChange={(v) =>
-                    updateNested("ead", "limiteNaoUtilizado", Number(v))
-                  }
-                  placeholder="0,00"
-                />
-              </FieldGroup>
+                {inputs.produto !== 'emprestimo' && (
+                  <FieldGroup label="Limite não utilizado" tooltip={TOOLTIPS.limiteNaoUtilizado}>
+                    <Input
+                      type="number"
+                      value={inputs.ead?.limiteNaoUtilizado ?? 0}
+                      onChange={(v) =>
+                        updateNested("ead", "limiteNaoUtilizado", Number(v))
+                      }
+                      placeholder="0,00"
+                    />
+                    <Helper>FCC será aplicado ao limite não utilizado</Helper>
+                  </FieldGroup>
+                )}
 
-              <FieldGroup label="Tipo CCF" tooltip={TOOLTIPS.tipoCCF}>
-                <Select
-                  value={inputs.ead?.ccfTipo ?? "outro"}
-                  onChange={(v) => updateNested("ead", "ccfTipo", v)}
-                >
-                  <option value="linha_irrevogavel">Linha irrevogável (50%)</option>
-                  <option value="linha_revogavel">Linha revogável (10%)</option>
-                  <option value="garantia_prestada">Garantia (100%)</option>
-                  <option value="comercio_exterior">Comércio ext. (20%)</option>
-                  <option value="outro">Outro (100%)</option>
-                </Select>
-              </FieldGroup>
-            </Row>
-          </Card>
+                {inputs.produto !== 'emprestimo' && (
+                  <FieldGroup label="Tipo FCC" tooltip={TOOLTIPS.tipoFCC}>
+                    <Select
+                      value={inputs.ead?.fccTipo ?? "outro"}
+                      onChange={(v) => updateNested("ead", "fccTipo", v)}
+                    >
+                      {(inputs.produto === 'limite' || inputs.produto === 'credito_imobiliario') && (
+                        <>
+                          <option value="linha_irrevogavel">Irrevogável (50%)</option>
+                          <option value="linha_revogavel">Revogável (10%)</option>
+                        </>
+                      )}
+                      {inputs.produto === 'cartao' && (
+                        <>
+                          <option value="linha_revogavel">Transactor (10%)</option>
+                          <option value="linha_irrevogavel">Revolvente (50%)</option>
+                        </>
+                      )}
+                      {inputs.produto === 'garantia' && (
+                        <option value="garantia_prestada">Garantia (100%)</option>
+                      )}
+                      <option value="comercio_exterior">Comércio ext. (20%)</option>
+                      <option value="outro">Outro (100%)</option>
+                    </Select>
+                  </FieldGroup>
+                )}
+              </Row>
+            </Card>
+          )}
 
           {/* Identificação */}
           <Card title="Identificação" subtitle="Produto e contraparte">
