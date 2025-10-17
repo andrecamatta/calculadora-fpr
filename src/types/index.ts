@@ -52,7 +52,7 @@ export type ProjectFinanceFase =
 
 export type TipoImovel = "residencial" | "nao_residencial";
 
-export type FundosAbordagem = "sem-informacao" | "look-through" | "regulamento" | "mandato";
+export type FundosAbordagem = "sem-informacao" | "nao-identificavel" | "look-through" | "regulamento" | "mandato";
 
 export type FundoTipo = "equity" | "fixedIncome" | "mixed" | "outros";
 
@@ -60,7 +60,7 @@ export type SetorPublicoTipo = "estado" | "municipio" | "df" | "psp" | "estatal"
 
 export type OutraExposicaoTipo = "caixa" | "ouro" | "acoes_listadas" | "acoes_nao_listadas" | "ativo_fixo" | "outros";
 
-export type EquityFPR = "nao" | "250" | "1250";
+export type EquityFPR = "nao" | "100" | "250" | "400" | "1250";
 
 export type CreditoTributarioFPR = "nao" | "100" | "600" | "1250";
 
