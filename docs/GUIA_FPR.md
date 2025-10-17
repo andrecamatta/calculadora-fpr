@@ -23,8 +23,8 @@ Este guia explica as principais situações que resultam em cada valor de FPR (F
 
 ### Principais situações:
 
-1. **Soberano com rating A+ a A-**
-   - Soberano estrangeiro com rating nessa faixa
+1. **Soberano Estrangeiro com rating A- a AA-**
+   - Soberano estrangeiro com rating nessa faixa (Art. 25, II)
    - Risco soberano moderadamente baixo
 
 2. **IF Categoria A + Prazo ≤ 90 dias**
@@ -126,18 +126,19 @@ Este guia explica as principais situações que resultam em cada valor de FPR (F
 
 **Corporate Grande de Baixo Risco**
 
-**Critérios objetivos (Art. 37, atualizado pela Res. BCB 323/2023):**
-1. Demonstrações financeiras auditadas por auditor independente (CVM ou equivalente)
-2. **Porte:** Ativos totais > R$ 240 MM **OU** receita bruta anual > R$ 300 MM
-3. Não ser ativo problemático (Res. 4.557/2017 e Res. BCB 265/2022)
-4. Entidade ou controladora estrangeira com ações negociadas em bolsa
-5. **SEM** financiamento especializado (se houver, vira 100% ou 130%)
+**Critérios objetivos (Art. 35, atualizado pela Res. BCB 323/2023):**
+1. **Inciso I**: Demonstrações financeiras auditadas por auditor independente (CVM ou equivalente)
+2. **Inciso II**: Ativos totais > R$ 240 MM **OU** receita bruta anual > R$ 300 MM
+3. **Inciso III**: Não ser ativo problemático (Res. 4.557/2017 e Res. BCB 265/2022)
+4. **Inciso IV**: ID (Índice de Descumprimento) no SCR ≤ 0,05%
+5. **Inciso V**: Ações negociadas em bolsa (própria ou controladora) com oferta pública
+6. **Regra geral**: SEM financiamento especializado (se houver, vira 100% ou 130%)
 
 **⚠️ Observações importantes:**
-- Rating externo **NÃO é requisito de elegibilidade**
+- Rating externo **NÃO é requisito** para FPR 65%
 - Financiamento especializado (objeto, commodities, project finance) TEM PRIORIDADE e sobrepõe esta classificação
 
-**Base regulatória**: Art. 37 (Res. BCB 229/2022, atualizado pela Res. BCB 323/2023)
+**Base regulatória**: Art. 35 (Res. BCB 229/2022, atualizado pela Res. BCB 323/2023)
 
 ---
 
@@ -178,9 +179,10 @@ Este guia explica as principais situações que resultam em cada valor de FPR (F
 
 **PME (Pequenas e Médias Empresas)**
 
-**Requisitos simultâneos:**
+**Requisitos simultâneos (Art. 36):**
 - Contraparte: Empresa não financeira
-- Receita anual ≤ R$ 300 milhões
+- Ativo total < R$ 240 milhões **E**
+- Receita bruta anual < R$ 300 milhões
 - **SEM** financiamento especializado (se houver, vira 100% ou 130%)
 
 **⚠️ Importante**: Financiamento especializado (objeto, commodities, project finance) TEM PRIORIDADE e sobrepõe esta classificação.
@@ -379,8 +381,9 @@ Após calcular o FPR base, podem ser aplicados:
 
 Alguns campos são para **validação de elegibilidade**, não afetam o cálculo:
 
-- **Receita anual**: Valida se realmente é PME ou Grande BR, mas o FPR é determinado pelo checkbox marcado
-- **Rating corporate**: Valida elegibilidade Grande BR (requer ≥ BB-), mas não altera o FPR de 65%
+- **Receita anual**: Valida se realmente é PME (< R$ 300 MM) ou Grande (> R$ 300 MM ou ativo > R$ 240 MM)
+- **ID (Índice de Descumprimento) no SCR**: Requisito para Grande BR (≤ 0,05%)
+- **Rating corporate**: NÃO é requisito regulatório para FPR 65%, mas pode ser usado na análise de "capacidade adequada" quando não há dados no SCR (Art. 35, §4º)
 
 ---
 

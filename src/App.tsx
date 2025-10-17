@@ -170,20 +170,78 @@ export default function App() {
 
           {/* EAD contextual por produto */}
           {inputs.produto === 'derivativo' ? (
-            <Card title="EAD - Derivativos (SA-CCR)">
+            <Card title="EAD - Derivativos (SA-CCR)" subtitle="Standardised Approach - Counterparty Credit Risk">
               <Helper>
-                Derivativos usam <strong>SA-CCR</strong> (Standardised Approach - Counterparty Credit Risk) conforme Circular BCB 3.809/2016.
-                EAD calculado via: <em>Valor de Reposição + Ganho Potencial Futuro</em>.
-                Não utiliza FCC tradicional.
+                Conforme Circular BCB 3.809/2016: <strong>EAD = RC + PFE</strong>
               </Helper>
+              <Row>
+                <FieldGroup label="Valor de Reposição (RC)">
+                  <Input
+                    type="number"
+                    value={inputs.ead?.derivativosRC ?? 0}
+                    onChange={(v) => updateNested("ead", "derivativosRC", Number(v))}
+                    placeholder="0,00"
+                  />
+                  <Helper>Replacement Cost - Valor justo do derivativo</Helper>
+                </FieldGroup>
+
+                <FieldGroup label="Ganho Potencial Futuro (PFE)">
+                  <Input
+                    type="number"
+                    value={inputs.ead?.derivativosPFE ?? 0}
+                    onChange={(v) => updateNested("ead", "derivativosPFE", Number(v))}
+                    placeholder="0,00"
+                  />
+                  <Helper>Potential Future Exposure - Calculado via SA-CCR</Helper>
+                </FieldGroup>
+
+                <FieldGroup label="EAD (calculado)">
+                  <Input
+                    type="number"
+                    value={(inputs.ead?.derivativosRC ?? 0) + (inputs.ead?.derivativosPFE ?? 0)}
+                    disabled
+                    placeholder="0,00"
+                  />
+                  <Helper>EAD = RC + PFE</Helper>
+                </FieldGroup>
+              </Row>
             </Card>
           ) : inputs.produto === 'fundo' ? (
-            <Card title="EAD - Fundos">
+            <Card title="EAD - Fundos" subtitle="Exposição em fundos de investimento">
               <Helper>
-                Para fundos, <strong>EAD = Valor da cota × Quantidade</strong>.
-                FPR é aplicado conforme abordagem escolhida (look-through, mandato ou conservadora).
-                Não utiliza FCC tradicional.
+                <strong>EAD = Valor da cota × Quantidade de cotas</strong>
               </Helper>
+              <Row>
+                <FieldGroup label="Valor da cota (R$)">
+                  <Input
+                    type="number"
+                    value={inputs.ead?.fundosValorCota ?? 0}
+                    onChange={(v) => updateNested("ead", "fundosValorCota", Number(v))}
+                    placeholder="0,00"
+                  />
+                  <Helper>Valor unitário da cota do fundo</Helper>
+                </FieldGroup>
+
+                <FieldGroup label="Quantidade de cotas">
+                  <Input
+                    type="number"
+                    value={inputs.ead?.fundosQuantidade ?? 0}
+                    onChange={(v) => updateNested("ead", "fundosQuantidade", Number(v))}
+                    placeholder="0"
+                  />
+                  <Helper>Total de cotas detidas</Helper>
+                </FieldGroup>
+
+                <FieldGroup label="EAD (calculado)">
+                  <Input
+                    type="number"
+                    value={(inputs.ead?.fundosValorCota ?? 0) * (inputs.ead?.fundosQuantidade ?? 0)}
+                    disabled
+                    placeholder="0,00"
+                  />
+                  <Helper>EAD = Valor × Quantidade</Helper>
+                </FieldGroup>
+              </Row>
             </Card>
           ) : (
             <Card title="EAD (Exposure at Default)" subtitle="Valor da exposição ao risco de crédito">

@@ -1,0 +1,5 @@
+# Ignorar PDFs para não versionar arquivos grandes
+*.pdf
+
+# Manter o índice JSON versionado
+!index.json

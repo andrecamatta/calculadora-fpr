@@ -197,6 +197,14 @@ export interface EADInfo {
   fccTipo: FCCTipo;
   fccDetalhadoTipo?: FCCDetalhadoTipo; // Granularidade adicional
   fccCustom?: number; // Override manual
+
+  // Campos específicos para Derivativos (SA-CCR)
+  derivativosRC?: number; // Replacement Cost (Valor de Reposição)
+  derivativosPFE?: number; // Potential Future Exposure (Ganho Potencial Futuro)
+
+  // Campos específicos para Fundos
+  fundosValorCota?: number; // Valor da cota em R$
+  fundosQuantidade?: number; // Quantidade de cotas
 }
 
 export interface FPRInputs {

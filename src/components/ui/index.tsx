@@ -163,10 +163,11 @@ export const Select: React.FC<SelectProps> = ({ value, onChange, children, class
 
 interface InputProps {
   value: string | number;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   type?: string;
   placeholder?: string;
   className?: string;
+  disabled?: boolean;
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -175,13 +176,15 @@ export const Input: React.FC<InputProps> = ({
   type = "text",
   placeholder,
   className = "",
+  disabled = false,
 }) => (
   <input
     type={type}
     value={value}
-    onChange={(e) => onChange(e.target.value)}
+    onChange={onChange ? (e) => onChange(e.target.value) : undefined}
     placeholder={placeholder}
-    className={`w-full rounded-xl border px-3 py-0.5 h-7 text-xs bg-transparent ${className}`}
+    disabled={disabled}
+    className={`w-full rounded-xl border px-3 py-0.5 h-7 text-xs bg-transparent ${disabled ? 'opacity-60 cursor-not-allowed' : ''} ${className}`}
   />
 );
 
