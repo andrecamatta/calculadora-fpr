@@ -162,6 +162,7 @@ export interface CRMInfo {
   substituicaoGarantidor: boolean;
   fprGarantidor: number;
   seguroCredito?: boolean; // Res. BCB 324/2023
+  fprSeguradora?: number; // FPR da seguradora (Res. BCB 324/2023)
   nettingAgreement?: boolean;
   colaterais?: ColateralInfo[];
 }

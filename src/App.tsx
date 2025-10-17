@@ -519,6 +519,7 @@ export default function App() {
                     onChange={(v) => updateNested("fundos", "abordagem", v)}
                   >
                     <option value="sem-informacao">Sem informação (conservador)</option>
+                    <option value="nao-identificavel">Não identificável (1.250%)</option>
                     <option value="look-through">Look-through</option>
                     <option value="mandato">Mandato</option>
                   </Select>
@@ -584,9 +585,28 @@ export default function App() {
                 <FieldGroup label="Seguro de crédito (Res. 324/2023)" tooltip={TOOLTIPS.seguroCredito}>
                   <Switch
                     checked={inputs.crm.seguroCredito ?? false}
-                    onChange={(v) => updateNested("crm", "seguroCredito", v)}
+                    onChange={(v) => {
+                      updateNested("crm", "seguroCredito", v);
+                      // Inicializa fprSeguradora com valor padrão quando ativado
+                      if (v && inputs.crm.fprSeguradora === undefined) {
+                        updateNested("crm", "fprSeguradora", 20);
+                      }
+                    }}
                   />
                 </FieldGroup>
+
+                {inputs.crm.seguroCredito && (
+                  <FieldGroup label="FPR da seguradora (%)" tooltip={TOOLTIPS.fprSeguradora}>
+                    <Input
+                      type="number"
+                      value={inputs.crm.fprSeguradora ?? 20}
+                      onChange={(v) =>
+                        updateNested("crm", "fprSeguradora", Number(v))
+                      }
+                      placeholder="Ex: 20"
+                    />
+                  </FieldGroup>
+                )}
               </Row>
 
               <div className="border-t pt-4">
@@ -604,8 +624,10 @@ export default function App() {
                       onChange={(v) => updateNested("especiais", "equity", v)}
                     >
                       <option value="nao">Não</option>
-                      <option value="250">250%</option>
-                      <option value="1250">1.250%</option>
+                      <option value="100">100% (Cooperativa)</option>
+                      <option value="250">250% (Padrão)</option>
+                      <option value="400">400% (Não listada/integrada)</option>
+                      <option value="1250">1.250% (Excesso)</option>
                     </Select>
                   </FieldGroup>
 

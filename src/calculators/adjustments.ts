@@ -72,11 +72,21 @@ export function applyCRMSubstitution(
 
   // Seguro de crédito (Res. BCB 324/2023)
   if (crm.seguroCredito) {
-    steps.push(
-      "Seguro de crédito reconhecido como mitigador (Res. BCB 324/2023) ⇒ aplicar FPR da seguradora"
-    );
-    // Nota: Implementação completa requer FPR da seguradora
-    // Aqui apenas registramos a aplicabilidade
+    const fprSeguradora = Number(crm.fprSeguradora);
+
+    if (!isNaN(fprSeguradora)) {
+      const fprFinal = clamp(fprSeguradora, PISOS_FPR.minimo, PISOS_FPR.maximo);
+
+      steps.push(
+        `Seguro de crédito reconhecido (Res. BCB 324/2023) ⇒ FPR da seguradora: ${fprFinal}%`
+      );
+
+      return fprFinal;
+    } else {
+      steps.push(
+        "⚠️ Seguro de crédito ativo, mas FPR da seguradora não informado ⇒ sem ajuste aplicado"
+      );
+    }
   }
 
   // Netting agreement

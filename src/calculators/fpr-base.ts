@@ -123,13 +123,23 @@ function calcularEspeciais(
     return { fpr: ESPECIAIS_FPR.subordinado, classe: "subordinado" };
   }
 
+  if (especiais.equity === "100") {
+    steps.push("Participação em cooperativa do mesmo sistema (Art. 43, II) ⇒ FPR 100%");
+    return { fpr: ESPECIAIS_FPR.equityCooperativa, classe: "equity" };
+  }
+
   if (especiais.equity === "250") {
-    steps.push("Participação (equity) significativa não deduzida ⇒ FPR 250%");
+    steps.push("Participação (equity) significativa não deduzida (Art. 43, III) ⇒ FPR 250%");
     return { fpr: ESPECIAIS_FPR.equity250, classe: "equity" };
   }
 
+  if (especiais.equity === "400") {
+    steps.push("Participação não listada não integrada (Art. 43, I) ⇒ FPR 400%");
+    return { fpr: ESPECIAIS_FPR.equity400, classe: "equity" };
+  }
+
   if (especiais.equity === "1250") {
-    steps.push("Excedente/alguns casos de equity ⇒ FPR 1.250%");
+    steps.push("Excedente de participação significativa (Art. 45) ⇒ FPR 1.250%");
     return { fpr: ESPECIAIS_FPR.equity1250, classe: "equity" };
   }
 
@@ -522,6 +532,12 @@ function calcularFundos(
 
   if (produto !== "fundo") return null;
 
+  // Não identificável (Art. 59, II - FPR 1.250%)
+  if (fundos.abordagem === "nao-identificavel") {
+    steps.push("Fundo não identificável/inferível (Art. 59, II) ⇒ FPR 1.250%");
+    return { fpr: 1250, classe: "fundo_nao_identificavel" };
+  }
+
   // Look-through (preferencial)
   if (fundos.abordagem === "look-through" && typeof fundos.fprLookThrough === "number") {
     // Sanitização: FPR deve estar entre 0% e 1250%
@@ -625,13 +641,13 @@ export function computeFPRBase(
   const varejo = calcularVarejo(inputs, steps);
   if (varejo) return varejo;
 
-  // 8. Corporate (inclui validações PME/grande)
-  const corporate = calcularCorporate(inputs, steps);
-  if (corporate) return corporate;
-
-  // 9. Fundos (inclui mandato)
+  // 8. Fundos (produto específico tem prioridade)
   const fundos = calcularFundos(inputs, steps);
   if (fundos) return fundos;
+
+  // 9. Corporate (inclui validações PME/grande)
+  const corporate = calcularCorporate(inputs, steps);
+  if (corporate) return corporate;
 
   // 10. Derivativos
   const derivativo = calcularDerivativo(inputs, steps);

@@ -114,8 +114,10 @@ export const IMOB_NAO_RES_FPR = {
 // FPR Especiais (Arts. 59-62: subordinado, equity, crédito tributário)
 export const ESPECIAIS_FPR = {
   subordinado: 150,
-  equity250: 250,
-  equity1250: 1250,
+  equityCooperativa: 100, // Art. 43, II - Participação em cooperativa do mesmo sistema
+  equity250: 250, // Art. 43, III - Participação significativa padrão
+  equity400: 400, // Art. 43, I - Participação não listada não integrada
+  equity1250: 1250, // Art. 45 - Excesso de participação significativa
   creditoTributario100: 100,
   creditoTributario600: 600,
   creditoTributario1250: 1250,

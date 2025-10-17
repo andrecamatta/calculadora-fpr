@@ -281,8 +281,8 @@ export const TOOLTIPS: TooltipDefinitions = {
   // ===== FUNDOS =====
   abordagemFundos: {
     description:
-      "Método para calcular FPR: look-through (FPR médio dos ativos), mandato (FPR por tipo) ou regulamento (FPR conservador 100%).",
-    article: "Arts. 55-58",
+      "Método para calcular FPR: (1) Não identificável - quando não é possível identificar/inferir exposições = 1.250% (Art. 59, II), (2) Look-through - FPR médio ponderado dos ativos, (3) Mandato - FPR por tipo de fundo, (4) Sem informação - FPR conservador 100%.",
+    article: "Arts. 55-58 (abordagens) e Art. 59, II (não identificável)",
     regulation: "Res. BCB 229/2022",
   },
 
@@ -346,7 +346,14 @@ export const TOOLTIPS: TooltipDefinitions = {
 
   seguroCredito: {
     description:
-      "Seguro de crédito reconhecido como mitigador de risco. Aplica-se o FPR da seguradora conforme regulamentação específica.",
+      "Seguro de crédito reconhecido como mitigador de risco. Quando ativado, substitui o FPR do devedor pelo FPR da seguradora.",
+    article: "Res. BCB 324/2023",
+    regulation: "Res. BCB 324/2023",
+  },
+
+  fprSeguradora: {
+    description:
+      "FPR da companhia seguradora que fornece o seguro de crédito. Substitui o FPR do devedor original quando seguro de crédito está ativo. Deve ser calculado conforme Res. BCB 229/2022.",
     article: "Res. BCB 324/2023",
     regulation: "Res. BCB 324/2023",
   },
@@ -361,8 +368,8 @@ export const TOOLTIPS: TooltipDefinitions = {
 
   equity: {
     description:
-      "Participação societária (ações, quotas) não deduzida do capital. FPR: participação significativa 250%, excedentes 1250%.",
-    article: "Arts. 60-61",
+      "Participação societária (ações, quotas) não deduzida do capital. FPRs: (1) Cooperativa do mesmo sistema 100% (Art. 43, II), (2) Participação significativa padrão 250% (Art. 43, III), (3) Participação não listada não integrada 400% (Art. 43, I), (4) Excedente de participação significativa 1.250% (Art. 45 - >15% PR individual ou >60% PR agregado).",
+    article: "Arts. 43 e 45",
     regulation: "Res. BCB 229/2022",
   },
 
